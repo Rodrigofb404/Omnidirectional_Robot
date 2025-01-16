@@ -1,6 +1,6 @@
 // ----------- ATmega328p Registers Config. ---------------
 #include <avr/io.h>
-
+#include <util/delay.h>
 // ---------------- Interrupts handling -----------------
 
 void enable_interruptions(void) {
