@@ -1,9 +1,7 @@
 #include <atmega328p.h>
 
-#define SET_ALL 0xFF
-#define CLEAR_ALL 0x00
-
 int main (void) {
+  config_timer0_PWM(1, 0, 1, 128);
   while (1)
   {
   } 

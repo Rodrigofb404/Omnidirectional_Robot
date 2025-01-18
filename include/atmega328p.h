@@ -22,7 +22,7 @@ void timer0_PWM_mode (int8_t mode) {
 
     switch (mode) {
         case 0:
-            TCCR0A |= (1 << WGM00) | (1 << WGM01);
+            TCCR0A |= ((1 << WGM00) | (1 << WGM01));
             break;
         case 1:
             TCCR0A |= (1 << WGM00);
@@ -50,7 +50,7 @@ void timer0_PWM_invert_mode (int8_t mode) {
     if (mode == 0) {
         TCCR0A |= (1 << COM0A1);
     } else if (mode == 1)
-        TCCR0A |= (1 << COM0A0) | (1 << COM0A1);
+        TCCR0A |= ((1 << COM0A0) | (1 << COM0A1));
 }
 
 // ======================================================================
@@ -74,13 +74,13 @@ void timer0_prescaler (int8_t mode) {
             TCCR0B |= (1 << CS01);
             break;
         case 2:
-            TCCR0B |= (1 << CS00) | (1 << CS01);
+            TCCR0B |= ((1 << CS00) | (1 << CS01)); // 0000_0001 || 0000_0010 = 0000_0011
             break;
         case 3:
             TCCR0B |= (1 << CS02);
             break;
         case 4:
-            TCCR0B |= (1 << CS00) | (1 << CS02);
+            TCCR0B |= ((1 << CS00) | (1 << CS02));
             break;
         default:
             // Valores inválidos
@@ -98,7 +98,9 @@ void timer0_prescaler (int8_t mode) {
 //                          |                        | 4 - Clock / 1024
 // ======================================================================
 
-void config_timer0_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode) {
+void config_timer0_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint8_t PWM_value) {
+    DDRD |= (1 << DDD6);
+    OCR0A = PWM_value;
     timer0_PWM_mode(pwm_mode);
     timer0_PWM_invert_mode(invert_mode);
     timer0_prescaler(prescaler_mode);
