@@ -98,7 +98,7 @@ void timer0_prescaler (int8_t mode) {
 //                          |                        | 4 - Clock / 1024
 // ======================================================================
 
-void timer0_PWM_config (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode) {
+void config_timer0_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode) {
     timer0_PWM_mode(pwm_mode);
     timer0_PWM_invert_mode(invert_mode);
     timer0_prescaler(prescaler_mode);
@@ -203,7 +203,7 @@ void timer1_prescaler (int8_t mode) {
 //                                |                            | 4 - Clock / 1024
 // ============================================================================================
 
-void timer1_PWM_config (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode) {
+void config_timer1_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode) {
     timer1_PWM_mode(pwm_mode);
     timer1_PWM_invert_mode(invert_mode);
     timer1_prescaler(prescaler_mode);
@@ -316,10 +316,8 @@ void timer2_prescaler (int8_t mode) {
 //                          |                               | 4 - Clock / 1024
 // ==================================================================================
 
-void timer2_PWM_config (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode) {
+void config_timer2_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode) {
     timer2_PWM_mode(pwm_mode);
     timer2_PWM_invert_mode(invert_mode);
     timer2_prescaler(prescaler_mode);
 }
-
-
