@@ -1,9 +1,9 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdio.h>
-#include <timer0.h>
-#include <timer1.h>
-#include <timer2.h>
+#include <timer0_PWM.h>
+#include <timer1_PWM.h>
+#include <timer2_PWM.h>
 
 #define SET_ALL 0xFF
 #define CLEAR_ALL 0x00
