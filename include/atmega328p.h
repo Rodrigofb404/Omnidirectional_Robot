@@ -89,6 +89,14 @@ void timer0_prescaler (int8_t mode) {
 }
 
 // ======================================================================
+// Set PWM Value
+// ======================================================================
+
+void timer0_PWM_value (uint8_t PWM_value) {
+    OCR0A = PWM_value;
+} 
+
+// ======================================================================
 //       PWM MODE           |      INVERT MODE       |     PRESCALER
 // ====================================================================== 
 //    0 - Fast PWM          | 0 - None-inverted mode | 0 - Clock
@@ -99,8 +107,8 @@ void timer0_prescaler (int8_t mode) {
 // ======================================================================
 
 void config_timer0_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint8_t PWM_value) {
-    DDRD |= (1 << DDD6);
-    OCR0A = PWM_value;
+    DDRD |= (1 << DDD6); // PD6
+    timer0_PWM_value(PWM_value);
     timer0_PWM_mode(pwm_mode);
     timer0_PWM_invert_mode(invert_mode);
     timer0_prescaler(prescaler_mode);
@@ -195,6 +203,14 @@ void timer1_prescaler (int8_t mode) {
     }
 }
 
+// ======================================================================
+// Set PWM Value
+// ======================================================================
+
+void timer1_PWM_value (uint16_t PWM_value) {
+    OCR1A = PWM_value;
+}
+
 // ============================================================================================
 //          PWM MODE              |        INVERT MODE         |         PRESCALER
 // ============================================================================================ 
@@ -205,7 +221,9 @@ void timer1_prescaler (int8_t mode) {
 //                                |                            | 4 - Clock / 1024
 // ============================================================================================
 
-void config_timer1_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode) {
+void config_timer1_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint16_t PWM_value) {
+    DDRB |= (1 << DDB1); // PB1
+    timer1_PWM_value(PWM_value);
     timer1_PWM_mode(pwm_mode);
     timer1_PWM_invert_mode(invert_mode);
     timer1_prescaler(prescaler_mode);
@@ -308,6 +326,14 @@ void timer2_prescaler (int8_t mode) {
     }
 }
 
+// ======================================================================
+// Set PWM Value
+// ======================================================================
+
+void timer2_PWM_value (uint8_t PWM_value) {
+    OCR2A = PWM_value;
+}
+
 // ==================================================================================
 //       PWM MODE           |            INVERT MODE        |     PRESCALER
 // ==================================================================================
@@ -318,7 +344,9 @@ void timer2_prescaler (int8_t mode) {
 //                          |                               | 4 - Clock / 1024
 // ==================================================================================
 
-void config_timer2_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode) {
+void config_timer2_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint8_t PWM_value) {
+    DDRB |= (1 << DDB3); // PB3 
+    timer2_PWM_value(PWM_value);
     timer2_PWM_mode(pwm_mode);
     timer2_PWM_invert_mode(invert_mode);
     timer2_prescaler(prescaler_mode);
