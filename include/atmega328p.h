@@ -4,6 +4,7 @@
 #include <timer0_PWM.h>
 #include <timer1_PWM.h>
 #include <timer2_PWM.h>
+#include <encoder.h>
 
 #define SET_ALL 0xFF
 #define CLEAR_ALL 0x00
@@ -66,4 +67,25 @@ void config_timer2_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mo
     timer2_PWM_mode(pwm_mode);
     timer2_PWM_invert_mode(invert_mode);
     timer2_prescaler(prescaler_mode);
+}
+
+void encoder () {
+    config_encoder ();
+}
+
+void interruption_routine () {
+    
+    if (PCIFR & (1 << PCIF1)) {
+        // Clears Interruption Flag
+        PCIFR |= (1 << PCIF1);
+        
+        if (PINC & (1 << PINC0)) {
+            counter0 ++;
+            PINB |= (1 << PINB4);
+        } else if (PINC & (1 << PINC1)) {
+            counter1++;
+        } else if (PINC & (1 << PINC2)) {
+            counter2++;
+        }    
+    }
 }
