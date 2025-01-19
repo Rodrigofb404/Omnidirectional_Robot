@@ -49,9 +49,10 @@ void timer1_PWM_invert_mode (int8_t mode) {
 
     if (mode == 0) {
         TCCR1A |= (1 << COM1A1) | (1 << COM1B1);
-    } else if (mode == 1)
+    } else if (mode == 1) {
         TCCR1A |= (1 << COM1A0) | (1 << COM1A1);
         TCCR1A |= (1 << COM1B0) | (1 << COM1B1);
+    }
 }
 
 // ======================================================================

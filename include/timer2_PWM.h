@@ -43,18 +43,12 @@ void timer2_PWM_invert_mode (int8_t mode) {
     // (COM2A0 & COM2A1 & COM2B0 & COM2B1) -> LOW
     TCCR2A &= ~((1 << COM2A0) | (1 << COM2A1) | (1 << COM2B0) | (1 << COM2B1));
 
-    switch (mode) {
-        case 0:
-            TCCR2A |= (1 << COM2A1);
-            TCCR2A |= (1 << COM2B1);
-            break;
-        case 1:
-            TCCR2A |= (1 << COM2A0) | (1 << COM2A1);
-            TCCR2A |= (1 << COM2B0) | (1 << COM2B1);
-            break;
-        default:
-            // Valores inválidos
-            break;
+    if (mode == 0) {
+        TCCR2A |= (1 << COM2A1);
+        TCCR2A |= (1 << COM2B1);
+    } else if(mode == 1) {
+        TCCR2A |= (1 << COM2A0) | (1 << COM2A1);
+        TCCR2A |= (1 << COM2B0) | (1 << COM2B1);
     }
 }
 
