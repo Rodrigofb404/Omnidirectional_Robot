@@ -93,6 +93,7 @@ void timer1_prescaler (int8_t mode) {
 // Set PWM Value
 // ======================================================================
 
-void timer1_PWM_value (uint16_t PWM_value) {
-    OCR1A = PWM_value;
+void timer1_PWM_value (uint16_t PWM_valueA, uint16_t PWM_valueB) {
+    OCR1A = PWM_valueA;
+    OCR1B = PWM_valueB;
 }

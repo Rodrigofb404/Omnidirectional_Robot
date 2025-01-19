@@ -46,14 +46,10 @@ void timer2_PWM_invert_mode (int8_t mode) {
     switch (mode) {
         case 0:
             TCCR2A |= (1 << COM2A1);
+            TCCR2A |= (1 << COM2B1);
             break;
         case 1:
             TCCR2A |= (1 << COM2A0) | (1 << COM2A1);
-            break;
-        case 2:
-            TCCR2A |= (1 << COM2B1);
-            break;
-        case 3:
             TCCR2A |= (1 << COM2B0) | (1 << COM2B1);
             break;
         default:
@@ -101,6 +97,7 @@ void timer2_prescaler (int8_t mode) {
 // Set PWM Value
 // ======================================================================
 
-void timer2_PWM_value (uint8_t PWM_value) {
-    OCR2A = PWM_value;
+void timer2_PWM_value (uint8_t PWM_valueA, uint8_t PWM_valueB) {
+    OCR2A = PWM_valueA;
+    OCR2B = PWM_valueB;
 }
