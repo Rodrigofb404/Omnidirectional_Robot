@@ -19,10 +19,10 @@
 //                          |                        | 4 - Clock / 1024
 // ======================================================================
 
-void config_timer0_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint8_t PWM_valueA) {
+void config_timer0_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint8_t PWM_valueA, uint8_t PWM_valueB) {
     DDRD |= (1 << DDD6); // PD6
-    DDRD |= (1 << DDD5); // PD6
-    timer0_PWM_value(PWM_valueA);
+    DDRD |= (1 << DDD5); // PD5
+    timer0_PWM_value(PWM_valueA, PWM_valueB);
     timer0_PWM_mode(pwm_mode);
     timer0_PWM_invert_mode(invert_mode);
     timer0_prescaler(prescaler_mode);
@@ -39,9 +39,10 @@ void config_timer0_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mo
 //                                |                            | 4 - Clock / 1024
 // ============================================================================================
 
-void config_timer1_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint16_t PWM_value) {
+void config_timer1_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint16_t PWM_valueA, uint16_t PWM_valueB) {
     DDRB |= (1 << DDB1); // PB1
-    timer1_PWM_value(PWM_value);
+    DDRB |= (1 << DDB2); // PB2
+    timer1_PWM_value(PWM_valueA, PWM_valueB);
     timer1_PWM_mode(pwm_mode);
     timer1_PWM_invert_mode(invert_mode);
     timer1_prescaler(prescaler_mode);
@@ -58,9 +59,10 @@ void config_timer1_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mo
 //                          |                               | 4 - Clock / 1024
 // ==================================================================================
 
-void config_timer2_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint8_t PWM_value) {
-    DDRB |= (1 << DDB3); // PB3 
-    timer2_PWM_value(PWM_value);
+void config_timer2_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mode, uint8_t PWM_valueA, uint8_t PWM_valueB) {
+    DDRB |= (1 << DDB3); // PB3
+    DDRD |= (1 << DDD3); // PD3 
+    timer2_PWM_value(PWM_valueA, PWM_valueB);
     timer2_PWM_mode(pwm_mode);
     timer2_PWM_invert_mode(invert_mode);
     timer2_prescaler(prescaler_mode);
