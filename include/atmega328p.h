@@ -70,12 +70,14 @@ void config_timer2_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mo
     timer2_prescaler(prescaler_mode);
 }
 
-void encoder () {
+void encoder (int8_t config_mode) {
     config_encoder ();
+    config_CTC2 (config_mode);
 }
 
-void interruption_routine () {
+void interruption_routine (uint16_t countertimer_compare) {
     encoder0_interruption ();
     encoder1_interruption ();
     encoder2_interruption ();
+    timer2_interruption (countertimer_compare);
 }
