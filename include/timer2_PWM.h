@@ -6,6 +6,7 @@
 // 0 - Fast PWM 
 // 1 - Phase PWM (TOP = 0xFF) 
 // 2 - Phase PWM (TOP = OCRA)
+// 3 - Compare Output Mode, non-PWM (TOP = OCRA)
 // ======================================================================
 
 void timer2_PWM_mode (int8_t mode) {
@@ -25,6 +26,11 @@ void timer2_PWM_mode (int8_t mode) {
             TCCR2A |= (1 << WGM20);
             TCCR2B |= (1 << WGM22);
             break;
+        case 3:
+            TCCR2A &= ~(1 << WGM20);
+            TCCR2A |= (1 << WGM21);
+            TCCR2B &= ~(1 << WGM22);
+            break;
         default:
             // Valores inválidos
             break;
@@ -32,10 +38,9 @@ void timer2_PWM_mode (int8_t mode) {
 }
 
 // ======================================================================
-// 0 - OC2A -> None-inverted mode (HIGH at bottom, LOW on match) 
-// 1 - OC2A -> Inverted mode (LOW at bottom, HIGH on Match) 
-// 2 - OC2B -> None-inverted mode (HIGH at bottom, LOW on match) 
-// 3 - OC2B -> Inverted mode (LOW at bottom, HIGH on Match) 
+// 0 - OC2A -> None-inverted mode (HIGH at bottom, LOW on match) / OC2B -> None-inverted mode (HIGH at bottom, LOW on match)
+// 1 - OC2A -> Inverted mode (LOW at bottom, HIGH on Match) / OC2B -> Inverted mode (LOW at bottom, HIGH on Match)
+// Any other value - OC2A/OC2B is disconnected
 // ======================================================================
 
 void timer2_PWM_invert_mode (int8_t mode) {
@@ -55,7 +60,7 @@ void timer2_PWM_invert_mode (int8_t mode) {
 // ======================================================================
 // 0 - Clock
 // 1 - Clock / 8
-// 2 - Clock / 64
+// 2 - Clock / 32
 // 3 - Clock / 256
 // 4 - Clock / 1024
 // ======================================================================
@@ -76,10 +81,10 @@ void timer2_prescaler (int8_t mode) {
             TCCR2B |= (1 << CS20) | (1 << CS21);
             break;
         case 3:
-            TCCR2B |= (1 << CS22);
+            TCCR2B |= ((1 << CS22) | (1 << CS21));
             break;
         case 4:
-            TCCR2B |= (1 << CS20) | (1 << CS22);
+            TCCR2B |= (1 << CS20) | (1 << CS21) | (1 << CS22);
             break;
         default:
             // Valores inválidos
@@ -88,7 +93,7 @@ void timer2_prescaler (int8_t mode) {
 }
 
 // ======================================================================
-// Set PWM Value
+// Set PWM Value / TOP
 // ======================================================================
 
 void timer2_PWM_value (uint8_t PWM_valueA, uint8_t PWM_valueB) {
@@ -96,3 +101,53 @@ void timer2_PWM_value (uint8_t PWM_valueA, uint8_t PWM_valueB) {
     OCR2B = PWM_valueB;
 }
 
+//=======================================================================
+// 0 - Interruption when overflow in Timer2 occurs
+// 1 - Interruption when compare match A in Timer2 occurs
+// 2 - Interruption when compare match B in Timer2 occurs
+// ======================================================================
+
+void config_CTC2 (int8_t mode) {
+    // Enables Global Interruption
+    SREG |= (1 << SREG_I);
+
+    //==========Teste===============
+    DDRB |= (1 << DDB5);
+    //==============================
+
+    switch (mode) {
+    case 0:
+        TIMSK2 |= (1 << TOIE2);
+        break;
+    case 1:
+        TIMSK2 |= (1 << OCIE2A);
+        break;
+    case 2:
+        TIMSK2 |= (1 << OCIE2B);
+        break;
+    default:
+        break;
+    }
+}
+
+// ======================================================================
+// Set delay timer
+// Clock = 8MHz
+// If prescaler = 1024, MAX = 255, and MODE = CTC -> 0.000128s / instruction
+// 0.000128s * 256 = 0.032768s / interruption
+// 0.032768 * 30 = 0.98304s
+// ======================================================================
+
+volatile uint8_t countertimer = 0; // If necessary, change the size of countertimer
+
+void timer2_interruption (uint8_t countertimer_compare) {
+    if (TIFR2 & (1 << OCF2A)) {
+        // Clearing flag
+        TIFR2 |= (1 << OCF2A); 
+        countertimer++;
+        if (countertimer >= countertimer_compare) {
+            countertimer = 0;
+            PINB |= (1 << PINB5);
+        }
+    }
+}
