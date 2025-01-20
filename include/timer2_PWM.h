@@ -104,3 +104,4 @@ void timer2_prescaler (int8_t mode) {
 void timer2_PWM_value (uint8_t PWM_value) {
     OCR2A = PWM_value;
 }
+
