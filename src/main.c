@@ -7,6 +7,6 @@ int main (void) {
   encoder(1);
   while (1)
   {
-    interruption_routine(19531); // ~1s delay
+    interruption_routine(30); // ~1s delay
   } 
 }

@@ -104,12 +104,16 @@ void timer2_PWM_value (uint8_t PWM_valueA, uint8_t PWM_valueB) {
 //=======================================================================
 // 0 - Interruption when overflow in Timer2 occurs
 // 1 - Interruption when compare match A in Timer2 occurs
-// 2 - Interruption when compare match A in Timer2 occurs
+// 2 - Interruption when compare match B in Timer2 occurs
 // ======================================================================
 
 void config_CTC2 (int8_t mode) {
     // Enables Global Interruption
     SREG |= (1 << SREG_I);
+
+    //==========Teste===============
+    DDRB |= (1 << DDB5);
+    //==============================
 
     switch (mode) {
     case 0:
@@ -128,17 +132,22 @@ void config_CTC2 (int8_t mode) {
 
 // ======================================================================
 // Set delay timer
+// Clock = 8MHz
+// If prescaler = 1024, MAX = 255, and MODE = CTC -> 0.000128s / instruction
+// 0.000128s * 256 = 0.032768s / interruption
+// 0.032768 * 30 = 0.98304s
 // ======================================================================
 
-volatile uint16_t countertimer = 0; // If necessary, change the size of countertimer
+volatile uint8_t countertimer = 0; // If necessary, change the size of countertimer
 
-void timer2_interruption (uint16_t countertimer_compare) {
+void timer2_interruption (uint8_t countertimer_compare) {
     if (TIFR2 & (1 << OCF2A)) {
         // Clearing flag
         TIFR2 |= (1 << OCF2A); 
         countertimer++;
         if (countertimer >= countertimer_compare) {
-            // Something
+            countertimer = 0;
+            PINB |= (1 << PINB5);
         }
     }
 }

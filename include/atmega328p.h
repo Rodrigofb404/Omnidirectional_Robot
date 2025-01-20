@@ -75,7 +75,7 @@ void encoder (int8_t config_mode) {
     config_CTC2 (config_mode);
 }
 
-void interruption_routine (uint16_t countertimer_compare) {
+void interruption_routine (uint8_t countertimer_compare) {
     encoder0_interruption ();
     encoder1_interruption ();
     encoder2_interruption ();
