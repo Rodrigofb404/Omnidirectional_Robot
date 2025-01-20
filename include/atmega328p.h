@@ -4,6 +4,7 @@
 #include <timer0_PWM.h>
 #include <timer1_PWM.h>
 #include <timer2_PWM.h>
+#include <timerX_PID.h>
 
 #define SET_ALL 0xFF
 #define CLEAR_ALL 0x00
