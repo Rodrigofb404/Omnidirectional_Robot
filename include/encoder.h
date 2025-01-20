@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <avr/io.h>
 
+
 //==========================================
 // Encoder in Proteus has 3 signals
 //------------------------------------------
@@ -8,11 +9,11 @@
 //  Direction of Rotation | Home Position
 //==========================================
 
-volatile uint8_t counter0 = 0;
-volatile uint8_t counter1 = 0;
-volatile uint8_t counter2 = 0;
+volatile uint64_t counter0 = 0;
+volatile uint64_t counter1 = 0;
+volatile uint64_t counter2 = 0;
 
-void config_encoder () {
+void config_encoder (void) {
     // Enables Global Interruption
     SREG |= (1 << SREG_I);
 
@@ -28,5 +29,24 @@ void config_encoder () {
 
     // Teste PB4
     DDRB |= (1 << DDB4);
+}
+
+void encoder_interruption (void) {
+    if (PCIFR & (1 << PCIF1)) {
+        // Clears Interruption Flag
+        PCIFR |= (1 << PCIF1);
+        
+        //PINC0 == 1? 0000_0000 & 0000_0001
+        if (PINC & (1 << PINC0)) {
+            counter0++;
+            PINB |= (1 << PINB4);
+        } 
+        if (PINC & (1 << PINC1)) {
+            counter1++;
+        } 
+        if (PINC & (1 << PINC2)) {
+            counter2++;
+        }    
+    }
 }
 

@@ -74,18 +74,5 @@ void encoder () {
 }
 
 void interruption_routine () {
-    
-    if (PCIFR & (1 << PCIF1)) {
-        // Clears Interruption Flag
-        PCIFR |= (1 << PCIF1);
-        
-        if (PINC & (1 << PINC0)) {
-            counter0 ++;
-            PINB |= (1 << PINB4);
-        } else if (PINC & (1 << PINC1)) {
-            counter1++;
-        } else if (PINC & (1 << PINC2)) {
-            counter2++;
-        }    
-    }
+    encoder_interruption ();
 }
