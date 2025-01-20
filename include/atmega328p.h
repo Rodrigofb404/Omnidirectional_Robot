@@ -4,6 +4,7 @@
 #include <timer0_PWM.h>
 #include <timer1_PWM.h>
 #include <timer2_PWM.h>
+#include <encoder.h>
 
 #define SET_ALL 0xFF
 #define CLEAR_ALL 0x00
@@ -66,4 +67,12 @@ void config_timer2_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mo
     timer2_PWM_mode(pwm_mode);
     timer2_PWM_invert_mode(invert_mode);
     timer2_prescaler(prescaler_mode);
+}
+
+void encoder () {
+    config_encoder ();
+}
+
+void interruption_routine () {
+    encoder_interruption ();
 }
