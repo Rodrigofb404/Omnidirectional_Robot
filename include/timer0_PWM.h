@@ -38,13 +38,16 @@ void timer0_PWM_mode (int8_t mode) {
 
 void timer0_PWM_invert_mode (int8_t mode) {
 
-    // (COM0A0 & COM0A1) -> LOW
-    TCCR0A &= ~((1 << COM0A0) | (1 << COM0A1));
+    // (COM0A0 & COM0A1 & COM0B0 & COM0B1) -> LOW
+    TCCR0A &= ~((1 << COM0A0) | (1 << COM0A1) | (1 << COM0B0) | (1 << COM0B1));
 
     if (mode == 0) {
         TCCR0A |= (1 << COM0A1);
-    } else if (mode == 1)
+        TCCR0A |= (1 << COM0B1);
+    } else if (mode == 1) {
         TCCR0A |= ((1 << COM0A0) | (1 << COM0A1));
+        TCCR0A |= ((1 << COM0B0) | (1 << COM0B1));
+    }
 }
 
 // ======================================================================
@@ -86,7 +89,12 @@ void timer0_prescaler (int8_t mode) {
 // Set PWM Value
 // ======================================================================
 
-void timer0_PWM_value (uint8_t PWM_valueA) {
+void timer0_PWM_value (uint8_t PWM_valueA, uint8_t PWM_valueB) {
     OCR0A = PWM_valueA;
+<<<<<<< HEAD
     //OCR0B = PWM_valueB;
 } 
+=======
+    OCR0B = PWM_valueB;
+} 
+>>>>>>> 5c5611bbe6e2005b525dadb31127e4550606a3cc
