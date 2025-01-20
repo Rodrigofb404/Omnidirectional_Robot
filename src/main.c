@@ -12,34 +12,25 @@
 #define SENSOR2_PIN PC2  // Encoder motor 2 (PCINT10)
 
 int main() {
-    // Configurar pinos dos sensores como entrada
-    DDRD &= ~((1 << SENSOR0_PIN) | (1 << SENSOR1_PIN));  // Sensores 0 e 1
-    DDRC &= ~(1 << SENSOR2_PIN);  // Sensor 2
+    // Configurações iniciais
+    config_timer0_pwm(1,0,1,255,64)
+    config_timer1_pwm(1,0,1,255,128)
+    config_timer2_pwm(1,0,1,255,210)
 
-    // Habilitar pull-ups internos
-    PORTD |= (1 << SENSOR0_PIN) | (1 << SENSOR1_PIN);
-    PORTC |= (1 << SENSOR2_PIN);
-
-    // Configurar interrupções externas para os encoders
-    EICRA = (1 << ISC01) | (1 << ISC11);  // Bordas de descida para INT0 e INT1
-    EIMSK = (1 << INT0) | (1 << INT1);    // Habilitar INT0 e INT1
-
-    // Configurar interrupção de mudança de pino para PCINT10 (Sensor 2)
-    PCICR |= (1 << PCIE1);  // Habilitar interrupções de PCINT[14:8]
-    PCMSK1 |= (1 << PCINT10);
-
-    // Configurar timers para PWM
-    config_timer0_PWM(0, 0, 2, 0);  // Motor 0
-    config_timer1_PWM(0, 0, 2, 0);  // Motor 1
-    config_timer2_PWM(0, 0, 2, 0);  // Motor 2
-
-    // Configurar timer para cálculo de RPM
     config_timer1();
+    config_pwm();
+
+    // Configurar interrupção externa no INT0 (PD2)
+    EICRA = (1 << ISC01);  // Interrupção na borda de descida
+    EIMSK = (1 << INT0);   // Habilitar INT0
 
     sei();  // Habilitar interrupções globais
 
     while (1) {
-        pid_control();  // Executar controle PID para todos os motores
-        _delay_ms(10);  // Delay para estabilização
+        pid_control();  // Executa o controle PID continuamente
+        _delay_ms(10);  // Pequeno atraso para estabilidade
     }
+
+    return 0;
 }
+
