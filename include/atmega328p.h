@@ -75,5 +75,7 @@ void encoder () {
 }
 
 void interruption_routine () {
-    encoder_interruption ();
+    encoder0_interruption ();
+    encoder1_interruption ();
+    encoder2_interruption ();
 }
