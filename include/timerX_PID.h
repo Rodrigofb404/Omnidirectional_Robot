@@ -51,7 +51,7 @@ void pid_control() {
     if (pid > 255) pid = 255;
 
     // Atualiza PWM
-    timer0_PWM_value((uint8_t)pid);
+    //timer0_PWM_value((uint8_t)pid);
 
     // Salva o erro atual para o próximo cálculo
     erro_anterior = erro;
