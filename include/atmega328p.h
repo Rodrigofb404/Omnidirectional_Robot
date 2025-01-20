@@ -4,11 +4,8 @@
 #include <timer0_PWM.h>
 #include <timer1_PWM.h>
 #include <timer2_PWM.h>
-<<<<<<< HEAD
 #include <timerX_PID.h>
-=======
 #include <encoder.h>
->>>>>>> 5c5611bbe6e2005b525dadb31127e4550606a3cc
 
 #define SET_ALL 0xFF
 #define CLEAR_ALL 0x00

@@ -91,10 +91,5 @@ void timer0_prescaler (int8_t mode) {
 
 void timer0_PWM_value (uint8_t PWM_valueA, uint8_t PWM_valueB) {
     OCR0A = PWM_valueA;
-<<<<<<< HEAD
-    //OCR0B = PWM_valueB;
-} 
-=======
     OCR0B = PWM_valueB;
 } 
->>>>>>> 5c5611bbe6e2005b525dadb31127e4550606a3cc
