@@ -43,17 +43,25 @@ void timer2_PWM_mode (int8_t mode) {
 // Any other value - OC2A/OC2B is disconnected
 // ======================================================================
 
-void timer2_PWM_invert_mode (int8_t mode) {
+void timer2_PWM_invert_mode (int8_t mode, int8_t start_OC2B) {
 
     // (COM2A0 & COM2A1 & COM2B0 & COM2B1) -> LOW
     TCCR2A &= ~((1 << COM2A0) | (1 << COM2A1) | (1 << COM2B0) | (1 << COM2B1));
 
     if (mode == 0) {
         TCCR2A |= (1 << COM2A1);
-        TCCR2A |= (1 << COM2B1);
+        if (start_OC2B != 0)
+        {
+            TCCR2A |= (1 << COM2B1);
+        }
+        
     } else if(mode == 1) {
         TCCR2A |= (1 << COM2A0) | (1 << COM2A1);
-        TCCR2A |= (1 << COM2B0) | (1 << COM2B1);
+        if (start_OC2B != 0)
+        {
+            TCCR2A |= (1 << COM2B0) | (1 << COM2B1);
+        }
+        
     }
 }
 
