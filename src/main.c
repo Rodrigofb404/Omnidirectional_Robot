@@ -5,8 +5,8 @@ int main (void) {
   IO_init();
   
   // debug_init();
-  config_timer0_PWM(1, 0, 1, 255, 0);
-  config_timer1_PWM(1, 0, 1, 255, 255);
+  config_timer0_PWM(0, 0, 4, 100, 0);
+  config_timer1_PWM(0, 0, 4 , 200, 255);
   encoder(1);
 
   motor1_rotation(0);

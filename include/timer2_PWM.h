@@ -138,13 +138,15 @@ void config_CTC2 (int8_t mode) {
     }
 }
 
+
+//=======================================================================
+// Calculate the right value to get the desired time interruption interval
 // ======================================================================
-// Set delay timer
-// Clock = 8MHz
-// If prescaler = 1024, MAX = 255, and MODE = CTC -> 0.000128s / instruction
-// 0.000128s * 256 = 0.032768s / interruption
-// 0.032768 * 30 = 0.98304s
-// ======================================================================
+uint16_t calc_compare_value(float tempo_desejado, uint32_t frequencia, uint16_t prescaler) {
+    uint16_t OCR_value = (uint16_t) ceil((tempo_desejado * frequencia) / prescaler) - 1;
+    return OCR_value;
+}
+
 
 volatile uint8_t countertimer = 0; // If necessary, change the size of countertimer
 
