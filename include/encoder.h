@@ -3,7 +3,7 @@
 
 
 //==========================================
-// Encoder in Proteus has 3 signals
+//   Encoder in Proteus has 3 signals
 //------------------------------------------
 //      Q1     |    Q2    | IDX
 //  Direction of Rotation | Home Position
@@ -23,20 +23,8 @@ void config_encoder (void) {
     // Pin change interrupt for especific inputs is enabled
     PCMSK0 |= (1 << PCINT0); // PB0
     PCMSK1 |= (1 << PCINT8); // PC0
-    PCMSK2 |= (1 << PCINT16); // PD0
+    PCMSK2 |= (1 << PCINT23); // PD7
 
-
-    // PB0 (PCINT0), PC0 (PCINT8), PD0 (PCINT16) as inputs
-    DDRB &= ~((1 << DDB0));
-    DDRC &= ~((1 << DDC0));
-    DDRD &= ~((1 << DDD0));
-
-    PORTB &= ~((1 << PORTB0));
-    PORTC &= ~((1 << PORTC0));
-    PORTD &= ~((1 << PORTD0));
-
-    // Teste PB4
-    DDRB |= (1 << DDB4);
 }
 
 void encoder0_interruption (void) {
@@ -50,9 +38,8 @@ void encoder0_interruption (void) {
 void encoder1_interruption (void) {
     if (PCIFR & (1 << PCIF1)) {
         // Clears Interruption Flag
-        PCIFR |= (1 << PCIF1);
-        counter1++;
-        PINB |= (1 << PINB4);
+        PCIFR = (1 << PCIF1);
+        counter1++;          
     }
 }
 

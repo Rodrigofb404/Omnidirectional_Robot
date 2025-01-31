@@ -36,17 +36,24 @@ void timer0_PWM_mode (int8_t mode) {
 // 1 - Inverted mode (LOW at bottom, HIGH on Match) 
 // ======================================================================
 
-void timer0_PWM_invert_mode (int8_t mode) {
+void timer0_PWM_invert_mode (int8_t mode, int8_t start_OC0B) {
 
     // (COM0A0 & COM0A1 & COM0B0 & COM0B1) -> LOW
     TCCR0A &= ~((1 << COM0A0) | (1 << COM0A1) | (1 << COM0B0) | (1 << COM0B1));
 
     if (mode == 0) {
         TCCR0A |= (1 << COM0A1);
-        TCCR0A |= (1 << COM0B1);
+        if (start_OC0B != 0)
+        {
+            TCCR0A |= (1 << COM0B1);
+        }
+        
     } else if (mode == 1) {
         TCCR0A |= ((1 << COM0A0) | (1 << COM0A1));
-        TCCR0A |= ((1 << COM0B0) | (1 << COM0B1));
+        if (start_OC0B != 0)
+        {
+            TCCR0A |= ((1 << COM0B0) | (1 << COM0B1));
+        }
     }
 }
 

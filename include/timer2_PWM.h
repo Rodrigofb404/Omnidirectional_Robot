@@ -43,17 +43,25 @@ void timer2_PWM_mode (int8_t mode) {
 // Any other value - OC2A/OC2B is disconnected
 // ======================================================================
 
-void timer2_PWM_invert_mode (int8_t mode) {
+void timer2_PWM_invert_mode (int8_t mode, int8_t start_OC2B) {
 
     // (COM2A0 & COM2A1 & COM2B0 & COM2B1) -> LOW
     TCCR2A &= ~((1 << COM2A0) | (1 << COM2A1) | (1 << COM2B0) | (1 << COM2B1));
 
     if (mode == 0) {
         TCCR2A |= (1 << COM2A1);
-        TCCR2A |= (1 << COM2B1);
+        if (start_OC2B != 0)
+        {
+            TCCR2A |= (1 << COM2B1);
+        }
+        
     } else if(mode == 1) {
         TCCR2A |= (1 << COM2A0) | (1 << COM2A1);
-        TCCR2A |= (1 << COM2B0) | (1 << COM2B1);
+        if (start_OC2B != 0)
+        {
+            TCCR2A |= (1 << COM2B0) | (1 << COM2B1);
+        }
+        
     }
 }
 
@@ -130,13 +138,15 @@ void config_CTC2 (int8_t mode) {
     }
 }
 
+
+//=======================================================================
+// Calculate the right value to get the desired time interruption interval
 // ======================================================================
-// Set delay timer
-// Clock = 8MHz
-// If prescaler = 1024, MAX = 255, and MODE = CTC -> 0.000128s / instruction
-// 0.000128s * 256 = 0.032768s / interruption
-// 0.032768 * 30 = 0.98304s
-// ======================================================================
+uint16_t calc_compare_value(float tempo_desejado, uint32_t frequencia, uint16_t prescaler) {
+    uint16_t OCR_value = (uint16_t) ceil((tempo_desejado * frequencia) / prescaler) - 1;
+    return OCR_value;
+}
+
 
 volatile uint8_t countertimer = 0; // If necessary, change the size of countertimer
 
