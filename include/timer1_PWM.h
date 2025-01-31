@@ -105,3 +105,39 @@ void timer1_PWM_value (uint16_t PWM_valueA, uint16_t PWM_valueB) {
     OCR1A = PWM_valueA;
     OCR1B = PWM_valueB;
 }
+
+//=======================================================================
+// Calculate the right value to get the desired time interruption interval
+// ======================================================================
+uint16_t calc_compare_value(float tempo_desejado, uint32_t frequencia, uint16_t prescaler) {
+    uint16_t OCR_value = (uint16_t) ceil((tempo_desejado * frequencia) / prescaler) - 1;
+    return OCR_value;
+}
+
+//=======================================================================
+// 0 - Interruption when compare match A in Timer2 occurs
+// 1 - Interruption when compare match B in Timer2 occurs
+// ======================================================================
+
+void config_CTC1 (int8_t mode) {
+
+    TCCR1A &= ~(1 << WGM10);
+    TCCR1B &= ~(1 << WGM11);
+    TCCR1A |= (1 << WGM12);
+
+    switch (mode) {
+        case 0:
+            TIMSK1 |= (1 << OCIE1A);
+            OCR1A = calc_compare_value(1, 8000000, 256);
+            break;
+        case 1:
+            TIMSK1 |= (1 << OCIE1B);
+            OCR1B = calc_compare_value(1, 8000000, 256);
+            break;
+        default:
+            break;
+    }
+
+    
+    sei();
+}
