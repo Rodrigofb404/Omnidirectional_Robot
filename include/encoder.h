@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <avr/io.h>
-
+#include <math.h>
 //==========================================
 //   Encoder in Proteus has 3 signals
 //------------------------------------------
@@ -19,7 +19,6 @@ void config_encoder (void) {
     PCMSK0 |= (1 << PCINT0); // PB0
     PCMSK1 |= (1 << PCINT8); // PC0
     PCMSK2 |= (1 << PCINT23); // PD7
-
 }
 
 
@@ -29,6 +28,6 @@ void config_encoder (void) {
 // ======================================================================
 
 float rpm_calc(int PPS, int PPR) {
-    float rpm = (PPS * 60) / PPR;
+    int16_t rpm = round((PPS * 60) / (2 *PPR));
     return rpm;
 }
