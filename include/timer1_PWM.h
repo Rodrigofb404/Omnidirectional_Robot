@@ -102,8 +102,10 @@ void timer1_prescaler (int8_t mode) {
 // ======================================================================
 
 void timer1_PWM_value (uint16_t PWM_valueA, uint16_t PWM_valueB) {
-    OCR1A = PWM_valueA;
-    OCR1B = PWM_valueB;
+    if (OCR1A + PWM_valueA >= 0 && OCR1B + PWM_valueB >= 0) {
+        OCR1A += PWM_valueA;
+        OCR1B += PWM_valueB;
+    }
 }
 
 //=======================================================================
@@ -133,11 +135,11 @@ void config_CTC1 (int8_t mode) {
     switch (mode) {
         case 0:
             TIMSK1 |= (1 << OCIE1A);
-            OCR1A = calc_compare_value(0.1, 16000000, 64);
+            OCR1A = calc_compare_value(0.2, 16000000, 256);
             break;
         case 1:
             TIMSK1 |= (1 << OCIE1B);
-            OCR1B = calc_compare_value(0.1, 16000000, 64);
+            OCR1B = calc_compare_value(0.2, 16000000, 256);
             break;
         default:
             break;
