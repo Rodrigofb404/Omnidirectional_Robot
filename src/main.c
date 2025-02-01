@@ -26,7 +26,9 @@ volatile uint8_t currentQ2M2;
 volatile uint8_t currentQ1M3;
 volatile uint8_t currentQ2M3;
 
-volatile uint8_t pi1;
+volatile uint8_t pwm1;
+volatile uint8_t pwm2;
+volatile uint8_t pwm3;
 
 // Count pulses for MOTOR1
 ISR(PCINT1_vect) {	
@@ -83,8 +85,8 @@ ISR(TIMER1_COMPA_vect) {
 	rpm_motor2 = rpm_calc(counter2, 20);
 	rpm_motor3 = rpm_calc(counter3, 20);
 
-	//pi1 = pi_control(rpm_motor1, 30);
-	//OCR0A = pi1;
+	pwm1 = pid_control(rpm_motor1, 50);
+	OCR0A = pwm1;
 	
 	if (rpm_motor1 >= 30 && rpm_motor1 <= 40) {
 		DDRB |= (1 << PB5);
