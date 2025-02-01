@@ -133,11 +133,11 @@ void config_CTC1 (int8_t mode) {
     switch (mode) {
         case 0:
             TIMSK1 |= (1 << OCIE1A);
-            OCR1A = calc_compare_value(1, 8000000, 256);
+            OCR1A = calc_compare_value(0.1, 16000000, 64);
             break;
         case 1:
             TIMSK1 |= (1 << OCIE1B);
-            OCR1B = calc_compare_value(1, 8000000, 256);
+            OCR1B = calc_compare_value(0.1, 16000000, 64);
             break;
         default:
             break;
