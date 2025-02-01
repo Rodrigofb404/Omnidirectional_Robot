@@ -27,7 +27,7 @@ void config_encoder (void) {
 // PPR = Pulses per rotation
 // ======================================================================
 
-float rpm_calc(int PPS, int PPR) {
-    int16_t rpm = round((PPS * 60) / (2 *PPR));
+float rpm_calc(int16_t PPS, int16_t PPR) {
+    float rpm = round((PPS * 120) / (PPR));
     return rpm;
 }

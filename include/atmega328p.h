@@ -13,6 +13,9 @@
 #define SET_ALL 0xFF
 #define CLEAR_ALL 0x00
 
+uint8_t speed_motor1;
+uint8_t speed_motor2;
+uint8_t speed_motor3;
 // ============================= Timer 0 ================================
 
 //       PWM MODE           |      INVERT MODE       |     PRESCALER
@@ -71,11 +74,6 @@ void encoder (int8_t config_mode) {
     config_encoder();
     config_CTC1(config_mode);
 }
-
-
-    uint8_t speed_motor1;
-    uint8_t speed_motor2;
-    uint8_t speed_motor3;
 
 void speed_up() {
     speed_motor1 = OCR0A;
