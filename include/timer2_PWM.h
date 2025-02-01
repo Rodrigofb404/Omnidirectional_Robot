@@ -104,17 +104,3 @@ void timer2_PWM_value (uint8_t PWM_valueA, uint8_t PWM_valueB) {
     OCR2A = PWM_valueA;
     OCR2B = PWM_valueB;
 }
-
-volatile uint8_t countertimer = 0; // If necessary, change the size of countertimer
-
-void timer2_interruption (uint8_t countertimer_compare) {
-    if (TIFR2 & (1 << OCF2A)) {
-        // Clearing flag
-        TIFR2 |= (1 << OCF2A); 
-        countertimer++;
-        if (countertimer >= countertimer_compare) {
-            countertimer = 0;
-            PINB |= (1 << PINB5);
-        }
-    }
-}
