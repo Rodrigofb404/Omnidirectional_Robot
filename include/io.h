@@ -39,8 +39,19 @@ void h_bridge_config() {
     DDRB |= (1 << PB1);
 }   
 
+void interface_config() {
+    // SPEED UP button
+    DDRB &= ~(1 << PB1); 
+    PORTB |= (1 << PB1); 
+
+    // SPEED DOWN button
+    DDRB &= ~(1 << PB2); 
+    PORTB |= (1 << PB2); 
+}
+
 void IO_init() {
     h_bridge_config();
     encoders_io_config();
     timer_io_config();
+    interface_config();
 }
