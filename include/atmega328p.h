@@ -5,7 +5,7 @@
 #include <timer0_PWM.h>
 #include <timer1_PWM.h>
 #include <timer2_PWM.h>
-#include <PID_control.h>
+#include <PI_control.h>
 #include <encoder.h>
 #include <io.h>
 #include <h_bridge.h>
@@ -113,3 +113,5 @@ void speed_down() {
         timer2_PWM_value(speed_motor2, speed_motor3-35);
     }
 }
+
+int pi_control(int16_t rpm, int16_t rpm_ideal);
