@@ -4,8 +4,8 @@
 
 // ======================================================================
 // 0 - Fast PWM 8-bit
-// 1 - Phase Corrected 8-bit (TOP = 0x00FF) 
-// 2 - Phase Corrected (TOP = ICR1) 
+// 1 - Phase Corrected 8-bit (TOP = 0x00FF)
+// 2 - Phase Corrected (TOP = ICR1)
 // 3 - Phase Corrected (TOP = OCR1A) (OC1B Disconnected)
 // ======================================================================
 
@@ -38,8 +38,8 @@ void timer1_PWM_mode (int8_t mode) {
 }
 
 // ======================================================================
-// 0 - None-inverted mode (HIGH at bottom, LOW on match) 
-// 1 - Inverted mode (LOW at bottom, HIGH on Match) 
+// 0 - None-inverted mode (HIGH at bottom, LOW on match)
+// 1 - Inverted mode (LOW at bottom, HIGH on Match)
 // ======================================================================
 
 void timer1_PWM_invert_mode (int8_t mode, int8_t start_OC1B) {
@@ -121,9 +121,14 @@ uint16_t calc_compare_value(float tempo_desejado, uint32_t frequencia, uint16_t 
 
 void config_CTC1 (int8_t mode) {
 
-    TCCR1A &= ~(1 << WGM10);
-    TCCR1B &= ~(1 << WGM11);
-    TCCR1A |= (1 << WGM12);
+    TCCR1A = 0x00;
+    TCCR1B = 0x00;
+
+    // Select CTC mode
+    TCCR1B |=  (1 << WGM12);
+    
+    // Clock / 256
+    TCCR1B |=  (1 << CS12);
 
     switch (mode) {
         case 0:
@@ -138,6 +143,5 @@ void config_CTC1 (int8_t mode) {
             break;
     }
 
-    
-    sei();
+    sei(); // Enables global interruption
 }
