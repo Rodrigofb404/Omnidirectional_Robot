@@ -28,10 +28,10 @@ ISR(INT0_vect) {
 }
 
 // Interrupção do Timer1 para cálculo de RPM
-ISR(TIMER1_COMPA_vect) {
-    rpm = (float)(pulsos * 60) / PULSOS_POR_ROTACAO;  // Calcula RPM
-    pulsos = 0;  // Reseta contador de pulsos
-}
+// ISR(TIMER1_COMPA_vect) {
+//     rpm = (float)(pulsos * 60) / PULSOS_POR_ROTACAO;  // Calcula RPM
+//     pulsos = 0;  // Reseta contador de pulsos
+// }
 
 // Controle PID
 void pid_control() {
