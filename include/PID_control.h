@@ -22,10 +22,10 @@ void config_timer1() {
     TIMSK1 = (1 << OCIE1A);               // Habilitar interrupção de comparação
 }
 
-// Interrupção para contagem de pulsos do encoder
-ISR(INT0_vect) {
-    pulsos++;  // Incrementa pulsos ao detectar borda descendente
-}
+// // Interrupção para contagem de pulsos do encoder
+// ISR(INT0_vect) {
+//     pulsos++;  // Incrementa pulsos ao detectar borda descendente
+// }
 
 // Interrupção do Timer1 para cálculo de RPM
 // ISR(TIMER1_COMPA_vect) {
