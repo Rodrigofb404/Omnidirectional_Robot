@@ -75,6 +75,16 @@ void encoder (int8_t config_mode) {
     config_CTC1(config_mode);
 }
 
+
+// ======================================================================
+// PPS = Pulses per Second
+// PPR = Pulses per rotation
+// ======================================================================
+float rpm_calc(int16_t PPS, int16_t PPR) {
+    float rpm = (PPS * 300) / (PPR);
+    return rpm;
+}
+
 void speed_up() {
     speed_motor1 = OCR0A;
     speed_motor2 = OCR2A;
