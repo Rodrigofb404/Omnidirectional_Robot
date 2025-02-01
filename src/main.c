@@ -75,14 +75,15 @@ ISR(PCINT0_vect) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-	rpm_motor1 = rpm_calc(counter1, 20);
-	rpm_motor2 = rpm_calc(counter2, 20);
-	rpm_motor3 = rpm_calc(counter3, 20);
+	rpm_motor1 = rpm_calc(counter1, 50);
+	rpm_motor2 = rpm_calc(counter2, 50);
+	rpm_motor3 = rpm_calc(counter3, 50);
 	
 	if (rpm_motor1 >= 15 && rpm_motor1 <= 19) {
 		DDRB |= (1 << PB5);
 		PORTB |= (1 << PB5);
 	}
+	
 	counter1 = 0;
 	counter2 = 0;
 	counter3 = 0;
