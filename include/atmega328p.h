@@ -71,3 +71,47 @@ void encoder (int8_t config_mode) {
     config_encoder();
     config_CTC1(config_mode);
 }
+
+
+    uint8_t speed_motor1;
+    uint8_t speed_motor2;
+    uint8_t speed_motor3;
+
+void speed_up() {
+    speed_motor1 = OCR0A;
+    speed_motor2 = OCR2A;
+    speed_motor3 = OCR2B;
+
+    if (speed_motor1 <= 220) {
+        timer0_PWM_value(speed_motor1+35, 0);
+    }
+
+    if (speed_motor2 <= 220)
+    {
+        timer2_PWM_value(speed_motor2+35, speed_motor3);
+    }
+
+    if (speed_motor3 <= 220)
+    {
+        timer2_PWM_value(speed_motor2, speed_motor3+35);
+    }   
+}
+void speed_down() {
+    speed_motor1 = OCR0A;
+    speed_motor2 = OCR2A;
+    speed_motor3 = OCR2B;
+
+    if (speed_motor1 >= 35) {
+        timer0_PWM_value(speed_motor1-35, 0);
+    }
+
+    if (speed_motor2 >= 35)
+    {
+        timer2_PWM_value(speed_motor2-35, speed_motor3);
+    }
+
+    if (speed_motor3 >= 35)
+    {
+        timer2_PWM_value(speed_motor2, speed_motor3-35);
+    }
+}
