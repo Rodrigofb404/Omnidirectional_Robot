@@ -83,7 +83,7 @@ ISR(TIMER1_COMPA_vect) {
 		DDRB |= (1 << PB5);
 		PORTB |= (1 << PB5);
 	}
-	
+
 	counter1 = 0;
 	counter2 = 0;
 	counter3 = 0;
@@ -92,22 +92,22 @@ ISR(TIMER1_COMPA_vect) {
 
 int main (void) {
 	IO_init();
-	config_timer0_PWM(0, 0, 1, 255, 0);
-	config_timer2_PWM(0, 0, 1 , 255, 255);
+	config_timer0_PWM(0, 0, 4, 220, 0);
+	config_timer2_PWM(0, 0, 4 , 200, 255);
 	encoder(0);
 
 	motor1_rotation(0);
 	motor2_rotation(0);
-	motor3_rotation(1);
+	motor3_rotation(0);
 
 	while (1)
 	{
-		if (!(PINB & (1 << PB1))) {
-			speed_up();
-		} 
+		// if (!(PINB & (1 << PB1))) {
+		// 	speed_up();
+		// } 
 		
-		if (!(PINB & (1 << PB2))) {
-			speed_down();
-		}	
+		// if (!(PINB & (1 << PB2))) {
+		// 	speed_down();
+		// }	
 	} 
 }

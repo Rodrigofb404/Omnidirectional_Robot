@@ -13,11 +13,11 @@
 #define SET_ALL 0xFF
 #define CLEAR_ALL 0x00
 
-uint8_t speed_motor1;
-uint8_t speed_motor2;
-uint8_t speed_motor3;
-// ============================= Timer 0 ================================
+int16_t speed_motor1;
+int16_t speed_motor2;
+int16_t speed_motor3;
 
+// ============================= Timer 0 ================================
 //       PWM MODE           |      INVERT MODE       |     PRESCALER
 // ====================================================================== 
 //    0 - Fast PWM          | 0 - None-inverted mode | 0 - Clock
@@ -35,7 +35,6 @@ void config_timer0_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mo
 }
 
 // ===================================== Timer 1 ==============================================
-
 //          PWM MODE              |        INVERT MODE         |         PRESCALER
 // ============================================================================================ 
 //   0 - Fast PWM 8-bit           | 0 - None-inverted mode     | 0 - Clock
@@ -53,7 +52,6 @@ void config_timer1_PWM (int8_t pwm_mode, int8_t invert_mode, int8_t prescaler_mo
 }
 
 // ================================== Timer 2 =======================================
-
 //        PWM MODE          |         INVERT MODE           |     PRESCALER
 // ==================================================================================
 //    0 - Fast PWM          | 0 - None-inverted mode (OC2A) | 0 - Clock
@@ -91,17 +89,17 @@ void speed_up() {
     speed_motor3 = OCR2B;
 
     if (speed_motor1 <= 220) {
-        timer0_PWM_value(speed_motor1+35, 0);
+        timer0_PWM_value(35, 0);
     }
 
     if (speed_motor2 <= 220)
     {
-        timer2_PWM_value(speed_motor2+35, speed_motor3);
+        timer2_PWM_value(35, 0);
     }
 
     if (speed_motor3 <= 220)
     {
-        timer2_PWM_value(speed_motor2, speed_motor3+35);
+        timer2_PWM_value(0, 35);
     }   
 }
 void speed_down() {
@@ -110,16 +108,16 @@ void speed_down() {
     speed_motor3 = OCR2B;
 
     if (speed_motor1 >= 35) {
-        timer0_PWM_value(speed_motor1-35, 0);
+        timer0_PWM_value(-35, 0);
     }
 
     if (speed_motor2 >= 35)
     {
-        timer2_PWM_value(speed_motor2-35, speed_motor3);
+        timer2_PWM_value(-35, speed_motor3);
     }
 
     if (speed_motor3 >= 35)
     {
-        timer2_PWM_value(speed_motor2, speed_motor3-35);
+        timer2_PWM_value(0, -35);
     }
 }
