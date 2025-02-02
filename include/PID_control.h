@@ -2,7 +2,7 @@
 #include <avr/interrupt.h>
 #include <math.h>
 
-float Kp = 1.0, Ki = 0.05, Kd = 0.05;
+float Kp = 0.9, Ki = 0.095, Kd = 0.095;
 float error0 = 0, error1 = 0, error2 = 0;
 float pid0 = 0, pid1 = 0, pid2 = 0;
 float Ts = 0.03;
