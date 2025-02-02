@@ -120,5 +120,7 @@ void speed_down() {
     }
 }
 
-int pid_control(int16_t rpm, int16_t rpm_ideal);
+int pid_control1(int16_t rpm, int16_t rpm_ideal);
+int pid_control2(int16_t rpm, int16_t rpm_ideal);
+int pid_control3(int16_t rpm, int16_t rpm_ideal);
 void calc_coeficients_pid();

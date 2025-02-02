@@ -80,13 +80,13 @@ ISR(TIMER1_COMPA_vect) {
 	rpm_motor2 = rpm_calc(counter2, 90);
 	rpm_motor3 = rpm_calc(counter3, 90);
 
-	pwm1 = pid_control(rpm_motor1, 50);
+	pwm1 = pid_control1(rpm_motor1, 50);
 	OCR0A = pwm1;
 
-	pwm2 = pid_control(rpm_motor2, 50);
+	pwm2 = pid_control2(rpm_motor2, 90);
 	OCR2A = pwm2;
 
-	pwm3 = pid_control(rpm_motor3, 50);
+	pwm3 = pid_control3(rpm_motor3, 150);
 	OCR2B = pwm3;
 
 	counter1 = 0;
