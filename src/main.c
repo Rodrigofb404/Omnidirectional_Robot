@@ -23,9 +23,6 @@ volatile uint8_t currentQ1M2;
 volatile uint8_t currentQ2M2;
 volatile uint8_t currentQ1M3;
 volatile uint8_t currentQ2M3;
-float media = 0;
-float soma = 0;
-uint8_t contador_media = 0;
 volatile uint8_t pwm1;
 volatile uint8_t pwm2;
 volatile uint8_t pwm3;
@@ -79,17 +76,11 @@ ISR(PCINT0_vect) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-	rpm_motor1 = rpm_calc(counter1, 100);
-	rpm_motor2 = rpm_calc(counter2, 100);
-	rpm_motor3 = rpm_calc(counter3, 100);
-	contador_media++;
-	soma += rpm_motor1;
-	if (contador_media == 3) {
-		media = soma / 3;
-		soma = 0;
-		contador_media = 0;
-	}
-	pwm1 = pid_control(media, 50);
+	rpm_motor1 = rpm_calc(counter1, 90);
+	rpm_motor2 = rpm_calc(counter2, 90);
+	rpm_motor3 = rpm_calc(counter3, 90);
+
+	pwm1 = pid_control(rpm_motor1, 50);
 	OCR0A = pwm1;
 
 	pwm2 = pid_control(rpm_motor2, 50);
