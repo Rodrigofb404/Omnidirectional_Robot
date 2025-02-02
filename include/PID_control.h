@@ -8,12 +8,12 @@ float error0 = 0, error1 = 0, error2 = 0;
 float pid0 = 0, pid1 = 0, pid2 = 0;
 float Ts = 0.03;
 uint8_t N = 20;
-uint8_t pwm;
+uint8_t pwm = 0;
 
 float a0, a1, a2, b0, b1, b2;
 float ku1, ku2, ke0, ke1, ke2;
 
-void calc_coeficients() {
+void calc_coeficients_pid() {
     a0 = (1 + N * Ts);
     a1 = -(2 + N * Ts);
     a2 = 1;
@@ -30,12 +30,11 @@ void calc_coeficients() {
 
 // Controle PID
 int pid_control(int16_t rpm, int16_t rpm_ideal) {
-    //ki = kp * 0.1/(2*(kp/ki));
     error2 = error1; error1 = error0; pid2 = pid1; pid1 = pid0; // Updates variables
     
     error0 = rpm_ideal - rpm; // Computes new error
 
-    pid0 = -ku1 * pid1 - ku2 * pid2 + ke0 * error0 + ke1 * error1 + ke2 * error2;
+    pid0 = -ku1 * pid1 - ku2 * pid2 + ke0 * error0 + ke1 * error1 + ke2 * error2; // Calculates pid
 
     // Limits output between 0 e 255
     if (pid0 < 0) pwm = 0;

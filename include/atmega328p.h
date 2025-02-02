@@ -1,6 +1,5 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
 #include <stdio.h>
 #include <timer0_PWM.h>
 #include <timer1_PWM.h>
@@ -73,7 +72,6 @@ void encoder (int8_t config_mode) {
     config_CTC1(config_mode);
 }
 
-
 // ======================================================================
 // PPS = Pulses per Second
 // PPR = Pulses per rotation
@@ -123,4 +121,4 @@ void speed_down() {
 }
 
 int pid_control(int16_t rpm, int16_t rpm_ideal);
-void calc_coeficients();
+void calc_coeficients_pid();
