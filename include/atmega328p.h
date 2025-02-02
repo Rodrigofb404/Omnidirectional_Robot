@@ -73,15 +73,12 @@ void encoder (int8_t config_mode) {
     config_CTC1(config_mode);
 }
 
-// 300 - 0.2
-// x - 0.01
-
 // ======================================================================
 // PPS = Pulses per Second
 // PPR = Pulses per rotation
 // ======================================================================
 float rpm_calc(int16_t PPS, int16_t PPR) {
-    float rpm = (PPS * 6000) / (PPR);
+    float rpm = (PPS * 750) / (PPR);
     return rpm;
 }
 
