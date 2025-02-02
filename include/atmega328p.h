@@ -123,4 +123,3 @@ void speed_down() {
 }
 
 int pid_control(int16_t rpm, int16_t rpm_ideal);
-void calc_coeficients ();

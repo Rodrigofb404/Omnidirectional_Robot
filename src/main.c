@@ -1,6 +1,4 @@
 #include <atmega328p.h>
-#include "avr8-stub.h"
-// #define F_CPU 1600000UL
 
 volatile int16_t counter1 = 0;
 volatile int16_t counter2 = 0;
@@ -17,12 +15,12 @@ volatile int16_t rpm_motor3 = 0;
 volatile int8_t motor1_direction; 
 volatile int8_t motor2_direction;
 volatile int8_t motor3_direction;
+
+
 volatile uint8_t currentQ1M1;
 volatile uint8_t currentQ2M1;
-
 volatile uint8_t currentQ1M2;
 volatile uint8_t currentQ2M2;
-
 volatile uint8_t currentQ1M3;
 volatile uint8_t currentQ2M3;
 
@@ -78,8 +76,6 @@ ISR(PCINT0_vect) {
 	}
 }
 
-
-
 ISR(TIMER1_COMPA_vect) {
 	rpm_motor1 = rpm_calc(counter1, 80);
 	rpm_motor2 = rpm_calc(counter2, 80);
@@ -88,16 +84,11 @@ ISR(TIMER1_COMPA_vect) {
 	pwm1 = pid_control(rpm_motor1, 50);
 	OCR0A = pwm1;
 
-	pwm2 = pid_control(rpm_motor2, 50);
-	OCR2A = pwm2;
+	// pwm2 = pid_control(rpm_motor2, 50);
+	// OCR2A = pwm2;
 
-	pwm3 = pid_control(rpm_motor3, 50);
-	OCR2B = pwm3;
-	
-	if (rpm_motor1 >= 30 && rpm_motor1 <= 40) {
-		DDRB |= (1 << PB5);
-		PORTB |= (1 << PB5);
-	}
+	// pwm3 = pid_control(rpm_motor3, 50);
+	// OCR2B = pwm3;
 
 	counter1 = 0;
 	counter2 = 0;
@@ -110,7 +101,6 @@ int main (void) {
 	config_timer0_PWM(0, 0, 4, 220, 0);
 	config_timer2_PWM(0, 0, 4, 200, 255);
 	encoder(0);
-	calc_coeficients();
 
 	motor1_rotation(0);
 	motor2_rotation(0);
