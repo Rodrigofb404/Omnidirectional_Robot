@@ -78,8 +78,8 @@ void encoder (int8_t config_mode) {
 // PPS = Pulses per Second
 // PPR = Pulses per rotation
 // ======================================================================
-int16_t rpm_calc(int16_t PPS, int16_t PPR) {
-    int16_t rpm = (PPS * 2000) / (PPR);
+float rpm_calc(int16_t PPS, int16_t PPR) {
+    float rpm = (PPS * 2000.0) / (PPR);
     return rpm;
 }
 
@@ -123,3 +123,4 @@ void speed_down() {
 }
 
 int pid_control(int16_t rpm, int16_t rpm_ideal);
+void calc_coeficients();

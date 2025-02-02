@@ -2,7 +2,9 @@
 #include <avr/interrupt.h>
 #include <math.h>
 
-float Kp = 0.9, Ki = 0.095, Kd = 0.095;
+// float Kp = 3.1, Ki = 0.02999991, Kd = 0.09; BOM
+// float Kp = 1.7, Ki = 0.01325, Kd = 0; MELHOR
+float Kp = 0.95, Ki = 0.0145, Kd = 0;
 float error0 = 0, error1 = 0, error2 = 0;
 float pid0 = 0, pid1 = 0, pid2 = 0;
 float Ts = 0.03;

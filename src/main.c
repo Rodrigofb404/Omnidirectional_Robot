@@ -23,7 +23,9 @@ volatile uint8_t currentQ1M2;
 volatile uint8_t currentQ2M2;
 volatile uint8_t currentQ1M3;
 volatile uint8_t currentQ2M3;
-
+float media = 0;
+float soma = 0;
+uint8_t contador_media = 0;
 volatile uint8_t pwm1;
 volatile uint8_t pwm2;
 volatile uint8_t pwm3;
@@ -77,18 +79,24 @@ ISR(PCINT0_vect) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-	rpm_motor1 = rpm_calc(counter1, 80);
-	rpm_motor2 = rpm_calc(counter2, 80);
-	rpm_motor3 = rpm_calc(counter3, 80);
-
-	pwm1 = pid_control(rpm_motor1, 50);
+	rpm_motor1 = rpm_calc(counter1, 100);
+	rpm_motor2 = rpm_calc(counter2, 100);
+	rpm_motor3 = rpm_calc(counter3, 100);
+	contador_media++;
+	soma += rpm_motor1;
+	if (contador_media == 3) {
+		media = soma / 3;
+		soma = 0;
+		contador_media = 0;
+	}
+	pwm1 = pid_control(media, 50);
 	OCR0A = pwm1;
 
-	// pwm2 = pid_control(rpm_motor2, 50);
-	// OCR2A = pwm2;
+	pwm2 = pid_control(rpm_motor2, 50);
+	OCR2A = pwm2;
 
-	// pwm3 = pid_control(rpm_motor3, 50);
-	// OCR2B = pwm3;
+	pwm3 = pid_control(rpm_motor3, 50);
+	OCR2B = pwm3;
 
 	counter1 = 0;
 	counter2 = 0;
@@ -100,6 +108,7 @@ int main (void) {
 	IO_init();
 	config_timer0_PWM(0, 0, 4, 220, 0);
 	config_timer2_PWM(0, 0, 4, 200, 255);
+	calc_coeficients();
 	encoder(0);
 
 	motor1_rotation(0);
