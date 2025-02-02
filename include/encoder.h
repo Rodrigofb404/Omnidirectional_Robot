@@ -20,14 +20,3 @@ void config_encoder (void) {
     PCMSK1 |= (1 << PCINT8); // PC0
     PCMSK2 |= (1 << PCINT23); // PD7
 }
-
-
-// ======================================================================
-// PPS = Pulses per Second
-// PPR = Pulses per rotation
-// ======================================================================
-
-float rpm_calc(int16_t PPS, int16_t PPR) {
-    float rpm = round((PPS * 120) / (PPR));
-    return rpm;
-}

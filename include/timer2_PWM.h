@@ -100,7 +100,9 @@ void timer2_prescaler (int8_t mode) {
 // Set PWM Value / TOP
 // ======================================================================
 
-void timer2_PWM_value (uint8_t PWM_valueA, uint8_t PWM_valueB) {
-    OCR2A = PWM_valueA;
-    OCR2B = PWM_valueB;
+void timer2_PWM_value (int16_t PWM_valueA, int16_t PWM_valueB) {
+    if (OCR2A + PWM_valueA >= 0 && OCR2B + PWM_valueB >= 0) {
+        OCR2A += PWM_valueA;
+        OCR2B += PWM_valueB;
+    }
 }
