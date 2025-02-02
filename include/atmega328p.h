@@ -121,3 +121,5 @@ void speed_down() {
         timer2_PWM_value(0, -35);
     }
 }
+
+int pid_control(int16_t rpm, int16_t rpm_ideal);

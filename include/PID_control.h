@@ -1,58 +1,46 @@
 #include <avr/io.h>
-#include <util/delay.h>
 #include <avr/interrupt.h>
+#include <math.h>
 
-#define SENSOR0_PIN PD2  // Pino do encoder do motor 0 (INT0)
-#define PULSOS_POR_ROTACAO 20
-#define FREQ_TIMER1 1     // Frequência de cálculo de RPM (1 Hz)
+float Kp = 1.0, Ki = 0.05, Kd = 0.05;
+float error0 = 0, error1 = 0, error2 = 0;
+float pid0 = 0, pid1 = 0, pid2 = 0;
+float Ts = 0.1;
+uint8_t N = 20;
+uint8_t pwm;
 
-// Variáveis globais
-volatile uint16_t pulsos = 0; // Contador de pulsos do encoder
-volatile float rpm = 0;       // Velocidade em RPM
-float rpm_ideal = 1000;       // Velocidade desejada
-float kp = 0.25, ki = 0.05, kd = 0.01;
-float erro = 0, erro_anterior = 0;
-float p = 0, i = 0, d = 0;
-float pid = 0;
+float a0, a1, a2, b0, b1, b2;
+float ku1, ku2, ke0, ke1, ke2;
 
-// Configuração do Timer1 para cálculo de RPM
-void config_timer1() {
-    TCCR1B = (1 << WGM12) | (1 << CS12);  // Modo CTC, prescaler 256
-    OCR1A = (F_CPU / 256) / FREQ_TIMER1;  // Configura para 1 Hz
-    TIMSK1 = (1 << OCIE1A);               // Habilitar interrupção de comparação
+void calc_coeficients() {
+    a0 = (1 + N * Ts);
+    a1 = -(2 + N * Ts);
+    a2 = 1;
+    b0 = Kp * (1 + N * Ts) + Ki * Ts * (1 + N * Ts) + Kd * N;
+    b1 = -(Kp * (2 + N * Ts) + Ki * Ts + 2 * Kd * N);
+    b2 = Kp + Kd * N;
+
+    ku1 = a1 / a0;
+    ku2 = a2 / a0;
+    ke0 = b0 / a0;
+    ke1 = b1 / a0;
+    ke2 = b2 / a0;
 }
 
-// // Interrupção para contagem de pulsos do encoder
-// ISR(INT0_vect) {
-//     pulsos++;  // Incrementa pulsos ao detectar borda descendente
-// }
+// Controle PI
+int pid_control(int16_t rpm, int16_t rpm_ideal) {
+    calc_coeficients ();
+    //ki = kp * 0.1/(2*(kp/ki));
+    error2 = error1; error1 = error0; pid2 = pid1; pid1 = pid0; // Updates variables
+    
+    error0 = rpm_ideal - rpm; // Computes new error
 
-// Interrupção do Timer1 para cálculo de RPM
-// ISR(TIMER1_COMPA_vect) {
-//     rpm = (float)(pulsos * 60) / PULSOS_POR_ROTACAO;  // Calcula RPM
-//     pulsos = 0;  // Reseta contador de pulsos
-// }
+    pid0 = -ku1 * pid1 - ku2 * pid2 + ke0 * error0 + ke1 * error1 + ke2 * error2;
 
-// Controle PID
-void pid_control() {
-    // Calcula erro
-    erro = rpm_ideal - rpm;
+    // Limits output between 0 e 255
+    if (pid0 < 0) pwm = 0;
+    else if (pid0 > 255) pwm = 255;
+    else  pwm = (uint8_t)pid0;
 
-    // Termos do PID
-    p = kp * erro;
-    i += ki * erro;
-    d = kd * (erro - erro_anterior);
-
-    // Saída do PID
-    pid = p + i + d;
-
-    // Limita saída entre 0 e 255
-    if (pid < 0) pid = 0;
-    if (pid > 255) pid = 255;
-
-    // Atualiza PWM
-    //timer0_PWM_value((uint8_t)pid);
-
-    // Salva o erro atual para o próximo cálculo
-    erro_anterior = erro;
+    return pwm;
 }
