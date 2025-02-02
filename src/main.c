@@ -5,9 +5,9 @@
 volatile int16_t counter1 = 0;
 volatile int16_t counter2 = 0;
 volatile int16_t counter3 = 0;
-volatile float rpm_motor1 = 0;
-volatile float rpm_motor2 = 0;
-volatile float rpm_motor3 = 0;
+volatile int16_t rpm_motor1 = 0;
+volatile int16_t rpm_motor2 = 0;
+volatile int16_t rpm_motor3 = 0;
 
 // ======================================================================
 // Maybe it's not necessary
@@ -81,12 +81,18 @@ ISR(PCINT0_vect) {
 
 
 ISR(TIMER1_COMPA_vect) {
-	rpm_motor1 = rpm_calc(counter1, 20);
-	rpm_motor2 = rpm_calc(counter2, 20);
-	rpm_motor3 = rpm_calc(counter3, 20);
+	rpm_motor1 = rpm_calc(counter1, 80);
+	rpm_motor2 = rpm_calc(counter2, 80);
+	rpm_motor3 = rpm_calc(counter3, 80);
 
 	pwm1 = pid_control(rpm_motor1, 50);
 	OCR0A = pwm1;
+
+	pwm2 = pid_control(rpm_motor2, 50);
+	OCR2A = pwm2;
+
+	pwm3 = pid_control(rpm_motor3, 50);
+	OCR2B = pwm3;
 	
 	if (rpm_motor1 >= 30 && rpm_motor1 <= 40) {
 		DDRB |= (1 << PB5);
@@ -102,8 +108,9 @@ ISR(TIMER1_COMPA_vect) {
 int main (void) {
 	IO_init();
 	config_timer0_PWM(0, 0, 4, 220, 0);
-	config_timer2_PWM(0, 0, 4 , 200, 255);
+	config_timer2_PWM(0, 0, 4, 200, 255);
 	encoder(0);
+	calc_coeficients();
 
 	motor1_rotation(0);
 	motor2_rotation(0);

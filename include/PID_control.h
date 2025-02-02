@@ -5,7 +5,7 @@
 float Kp = 1.0, Ki = 0.05, Kd = 0.05;
 float error0 = 0, error1 = 0, error2 = 0;
 float pid0 = 0, pid1 = 0, pid2 = 0;
-float Ts = 0.1;
+float Ts = 0.03;
 uint8_t N = 20;
 uint8_t pwm;
 
@@ -27,9 +27,8 @@ void calc_coeficients() {
     ke2 = b2 / a0;
 }
 
-// Controle PI
+// Controle PID
 int pid_control(int16_t rpm, int16_t rpm_ideal) {
-    calc_coeficients ();
     //ki = kp * 0.1/(2*(kp/ki));
     error2 = error1; error1 = error0; pid2 = pid1; pid1 = pid0; // Updates variables
     
