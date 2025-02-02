@@ -120,7 +120,65 @@ void speed_down() {
     }
 }
 
-int pid_control1(int16_t rpm, int16_t rpm_ideal);
-int pid_control2(int16_t rpm, int16_t rpm_ideal);
-int pid_control3(int16_t rpm, int16_t rpm_ideal);
+uint8_t pid_controlM1(float rpm, int16_t rpm_ideal);
+uint8_t pid_controlM2(float rpm, int16_t rpm_ideal);
+uint8_t pid_controlM3(float rpm, int16_t rpm_ideal);
 void calc_coeficients_pid();
+
+#define R 0.04        // Radius = 40mm
+#define L 0.10        // Distance between the robot center of mass and the wheels  
+#define MAX_rpm 262   // Max RPM that motors can reach with Max PWM
+
+#define ALPHA1 0.0      // Wheel 1 (0°)
+#define ALPHA2 2.0944   // Wheel 2 (120°)
+#define ALPHA3 4.1888   // Wheel 3 (240°)
+
+
+
+// ======================================================================
+// Vx - X-axis velocity
+// Vy - Y-axis velocity
+// W  - θ velocity
+// rpmx - velocity of the motors
+// ======================================================================
+void Kinematics(float Vx, float Vy, float W, float *desired_RPM_M1, float *desired_RPM_M2, float *desired_RPM_M3) {
+    float v1 = (-Vx * sin(ALPHA1) + Vy * cos(ALPHA1) + L * W) / R;
+    float v2 = (-Vx * sin(ALPHA2) + Vy * cos(ALPHA2) + L * W) / R;
+    float v3 = (-Vx * sin(ALPHA3) + Vy * cos(ALPHA3) + L * W) / R;
+
+    // Conversion of rad/s to RPM
+    *desired_RPM_M1 = (v1 * 60.0) / (2 * M_PI * R);
+    *desired_RPM_M2 = (v2 * 60.0) / (2 * M_PI * R);
+    *desired_RPM_M3 = (v3 * 60.0) / (2 * M_PI * R);
+
+    *desired_RPM_M1 = (*desired_RPM_M1 > MAX_rpm) ? MAX_rpm : (*desired_RPM_M1 < -MAX_rpm) ? -MAX_rpm : *desired_RPM_M1;
+    *desired_RPM_M2 = (*desired_RPM_M2 > MAX_rpm) ? MAX_rpm : (*desired_RPM_M2 < -MAX_rpm) ? -MAX_rpm : *desired_RPM_M2;
+    *desired_RPM_M3 = (*desired_RPM_M3 > MAX_rpm) ? MAX_rpm : (*desired_RPM_M3 < -MAX_rpm) ? -MAX_rpm : *desired_RPM_M3;
+}
+
+void direction_control(uint8_t FORWARD_btn, uint8_t LEFT_btn, uint8_t RIGHT_btn, uint8_t BACKWARD_btn, uint8_t CW_btn, uint8_t CCW_btn, 
+                       float *desired_RPM_M1, float *desired_RPM_M2, float *desired_RPM_M3) {
+
+    float Vx = 0.0, Vy = 0.0, W = 0.0;
+
+    if (FORWARD_btn) {
+        Vy = 0.04;       // 1 m/s para frente
+    } 
+    else if (LEFT_btn) {
+        Vx = -0.04;      // 1 m/s para esquerda
+    } 
+    else if (RIGHT_btn) {
+        Vx = 0.04;       // 1 m/s para direita
+    } 
+    else if (BACKWARD_btn) {
+        Vy = -0.04;      // 1 m/s para trás
+    } 
+    else if (CW_btn) {
+        W = 0.04;    // 1 rad/s no sentido horário
+    } 
+    else if (CCW_btn) {
+        W = -0.04;   // 1 rad/s no sentido anti-horário
+    }
+
+    Kinematics(Vx, Vy, W, desired_RPM_M1, desired_RPM_M2, desired_RPM_M3);
+}
