@@ -81,15 +81,15 @@ ISR(PCINT0_vect) {
 
 
 ISR(TIMER1_COMPA_vect) {
-	rpm_motor1 = rpm_calc(counter1, 20);
-	rpm_motor2 = rpm_calc(counter2, 20);
-	rpm_motor3 = rpm_calc(counter3, 20);
+	rpm_motor1 = rpm_calc(counter1, 300);
+	rpm_motor2 = rpm_calc(counter2, 300);
+	rpm_motor3 = rpm_calc(counter3, 300);
 
 	pwm1 = pid_control(rpm_motor1, 50);
 	OCR0A = pwm1;
 	
 	if (rpm_motor1 >= 30 && rpm_motor1 <= 40) {
-		DDRB |= (1 << PB5);
+		DDRB |= (1 << PB5); // test
 		PORTB |= (1 << PB5);
 	}
 
@@ -103,6 +103,7 @@ int main (void) {
 	IO_init();
 	config_timer0_PWM(0, 0, 4, 220, 0);
 	config_timer2_PWM(0, 0, 4 , 200, 255);
+	calc_coeficients_pid();
 	encoder(0);
 
 	motor1_rotation(0);
