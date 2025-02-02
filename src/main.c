@@ -97,8 +97,8 @@ ISR(TIMER1_COMPA_vect) {
 
 int main (void) {
 	IO_init();
-	config_timer0_PWM(0, 0, 4, 220, 0);
 	config_timer2_PWM(0, 0, 4, 200, 255);
+	config_timer0_PWM(0, 0, 4, 220, 0);
 	calc_coeficients();
 	encoder(0);
 
