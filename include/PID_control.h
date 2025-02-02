@@ -29,7 +29,7 @@ void calc_coeficients() {
 }
 
 // Controle PID
-int pid_control(int16_t rpm, int16_t rpm_ideal) {
+int pid_control(float rpm, int16_t rpm_ideal) {
     //ki = kp * 0.1/(2*(kp/ki));
     error2 = error1; error1 = error0; pid2 = pid1; pid1 = pid0; // Updates variables
     

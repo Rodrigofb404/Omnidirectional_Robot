@@ -3,9 +3,9 @@
 volatile int16_t counter1 = 0;
 volatile int16_t counter2 = 0;
 volatile int16_t counter3 = 0;
-volatile int16_t rpm_motor1 = 0;
-volatile int16_t rpm_motor2 = 0;
-volatile int16_t rpm_motor3 = 0;
+volatile float rpm_motor1 = 0;
+volatile float rpm_motor2 = 0;
+volatile float rpm_motor3 = 0;
 
 // ======================================================================
 // Maybe it's not necessary
