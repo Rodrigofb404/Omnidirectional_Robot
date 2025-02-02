@@ -9,7 +9,7 @@ void encoders_io_config () {
 
     DDRB &= ~((1 << DDB0));
     DDRC &= ~(PC0_PC1_PC2_PC3);  // PC0...PC3 -> INPUT
-    DDRD &= ~((1 << DDD7));
+    DDRD &= ~((1 << DDD2));
 
     PORTB &= ~((1 << PORTB0)); 
     PORTD &= ~((1 << PORTD7)); 
@@ -35,8 +35,10 @@ void timer_io_config() {
 }
 
 void h_bridge_config() {
-    DDRD = 0b00110111; // PD0...PD5 -> OUTPUT
+    DDRD = 0b00110011; // PD0...PD5 -> OUTPUT
     DDRB |= (1 << PB1);
+    DDRB |= (1 << PB0);
+    DDRB |= (1 << PB5);
 }   
 
 void interface_config() {

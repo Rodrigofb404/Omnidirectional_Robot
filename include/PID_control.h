@@ -37,7 +37,7 @@ void calc_coeficients_pid() {
 }
 
 // Controle PID
-int pid_control1(float rpm, int16_t rpm_ideal) {
+uint8_t pid_control1(float rpm, int16_t rpm_ideal) {
     error21 = error11; error11 = error01; pid21 = pid11; pid11 = pid01; // Updates variables
     
     error01 = rpm_ideal - rpm; // Computes new error
@@ -52,7 +52,7 @@ int pid_control1(float rpm, int16_t rpm_ideal) {
     return pwm;
 }
 
-int pid_control2(float rpm, int16_t rpm_ideal) {
+uint8_t pid_control2(float rpm, int16_t rpm_ideal) {
     error22 = error12; error12 = error02; pid22 = pid12; pid12 = pid02; // Updates variables
     
     error02 = rpm_ideal - rpm; // Computes new error
@@ -67,7 +67,7 @@ int pid_control2(float rpm, int16_t rpm_ideal) {
     return pwm;
 }
 
-int pid_control3(float rpm, int16_t rpm_ideal) {
+uint8_t pid_control3(float rpm, int16_t rpm_ideal) {
     error23 = error13; error13 = error03; pid23 = pid13; pid13 = pid03; // Updates variables
     
     error03 = rpm_ideal - rpm; // Computes new error
