@@ -1,11 +1,29 @@
 #include <atmega328p.h>
 
+// ======================================================================
+// Counts the quantity of pulses comming from the encoders 
+// ======================================================================
 volatile int16_t counter1 = 0;
 volatile int16_t counter2 = 0;
 volatile int16_t counter3 = 0;
+
+
+// ======================================================================
+// Measures the RPM of the motors
+// ======================================================================
 volatile float rpm_motor1 = 0;
 volatile float rpm_motor2 = 0;
 volatile float rpm_motor3 = 0;
+
+// ======================================================================
+// Verifys what button is pressed to choose the direction
+// ======================================================================
+volatile uint8_t FORWARD_btn;
+volatile uint8_t LEFT_btn;
+volatile uint8_t RIGHT_btn;
+volatile uint8_t BACKWARD_btn;
+volatile uint8_t CW_btn;
+volatile uint8_t CCW_btn;
 
 // ======================================================================
 // Maybe it's not necessary
@@ -16,16 +34,27 @@ volatile int8_t motor1_direction;
 volatile int8_t motor2_direction;
 volatile int8_t motor3_direction;
 
-
+// ======================================================================
+// Verifys the state of the pins to detect rise or falling edge
+// ======================================================================
 volatile uint8_t currentQ1M1;
 volatile uint8_t currentQ2M1;
-volatile uint8_t currentQ1M2;
 volatile uint8_t currentQ2M2;
-volatile uint8_t currentQ1M3;
 volatile uint8_t currentQ2M3;
-volatile uint8_t pwm1;
-volatile uint8_t pwm2;
-volatile uint8_t pwm3;
+
+// ======================================================================
+// PWM adjusted by PID control
+// ======================================================================
+volatile uint8_t PID_pwmM1;
+volatile uint8_t PID_pwmM2;
+volatile uint8_t PID_pwmM3;
+
+// ======================================================================
+// PWM adjusted by PID control
+// ======================================================================
+float desired_RPM_M1 = 0;
+float desired_RPM_M2 = 0;
+float desired_RPM_M3 = 0;
 
 // Count pulses for MOTOR1
 ISR(PCINT1_vect) {	
@@ -70,29 +99,46 @@ ISR(INT0_vect) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-	rpm_motor1 = rpm_calc(counter1, 120);
-	rpm_motor2 = rpm_calc(counter2, 120);
-	rpm_motor3 = rpm_calc(counter3, 120);
+	rpm_motor1 = rpm_calc(counter1, 300);
+	rpm_motor2 = rpm_calc(counter2, 300);
+	rpm_motor3 = rpm_calc(counter3, 300);
 
-	pwm1 = pid_control1(rpm_motor1, 50);
-	OCR0A = pwm1;
+	FORWARD_btn = !(PIND & (1 << PD7)) ? 1 : 0;
+	LEFT_btn = !(PINC & (1 << PC4)) ? 1 : 0; 
+	RIGHT_btn = !(PINB & (1 << PB2)) ? 1 : 0;
+	BACKWARD_btn = !(PINB & (1 << PB4)) ? 1 : 0;
+	CW_btn = !(PINC & (1 << PC5)) ? 1 : 0;
+	CCW_btn = 0;
 
-	pwm2 = pid_control2(rpm_motor2, 90);
-	OCR2A = pwm2;
+	direction_control(FORWARD_btn, LEFT_btn, RIGHT_btn, BACKWARD_btn, CW_btn, CCW_btn, &desired_RPM_M1, &desired_RPM_M2, &desired_RPM_M3);
+	
 
-	pwm3 = pid_control3(rpm_motor3, 150);
-	OCR2B = pwm3;
+	PID_pwmM1 = pid_controlM1(rpm_motor1, desired_RPM_M1);
+	OCR0A = PID_pwmM1;
+	if (desired_RPM_M1 < 0) motor1_rotation(1);
+	else motor1_rotation(0);
+
+	PID_pwmM2 = pid_controlM2(rpm_motor2, desired_RPM_M2);
+	OCR2A = PID_pwmM2;
+	if (desired_RPM_M2 < 0) motor2_rotation(1);
+	else motor2_rotation(0);
+
+	PID_pwmM3 = pid_controlM3(rpm_motor3, desired_RPM_M3);
+	OCR0B = PID_pwmM3;
+	if (desired_RPM_M3 < 0) motor3_rotation(1);
+	else motor3_rotation(0);
 
 	counter1 = 0;
 	counter2 = 0;
 	counter3 = 0;
+	
 }
 
 
 int main (void) {
 	IO_init();
-	config_timer0_PWM(0, 0, 4, 220, 200);
-	config_timer2_PWM(0, 0, 4, 200, 0);
+	config_timer0_PWM(0, 0, 4, 0, 0);
+	config_timer2_PWM(0, 0, 4, 0, 0);
 	calc_coeficients_pid();
 	encoder(0);
 
@@ -101,13 +147,6 @@ int main (void) {
 	motor3_rotation(0);
 
 	while (1)
-	{
-		// if (!(PINB & (1 << PB1))) {
-		// 	speed_up();
-		// } 
-		
-		// if (!(PINB & (1 << PB2))) {
-		// 	speed_down();
-		// }	
+	{	
 	} 
 }
