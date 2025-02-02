@@ -129,17 +129,17 @@ void config_CTC1 (int8_t mode) {
     // Select CTC mode
     TCCR1B |=  (1 << WGM12);
     
-    // Clock / 8
-    TCCR1B |= (1 << CS11) | (1 << CS10);
+    // Clock / 256
+    timer1_prescaler(1);
 
     switch (mode) {
         case 0:
             TIMSK1 |= (1 << OCIE1A);
-            OCR1A = calc_compare_value(0.08, 16000000, 64);
+            OCR1A = calc_compare_value(0.03, 16000000, 8);
             break;
         case 1:
             TIMSK1 |= (1 << OCIE1B);
-            OCR1B = calc_compare_value(0.08, 16000000, 64);
+            OCR1B = calc_compare_value(0.03, 16000000, 8);
             break;
         default:
             break;

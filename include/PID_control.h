@@ -2,10 +2,11 @@
 #include <avr/interrupt.h>
 #include <math.h>
 
-float Kp = 0.9, Ki = 0.095, Kd = 0.095;
+
+float Kp = 0.72, Ki = 0.0145, Kd = 0.0119; // BEST coef values for 0.3 ms verify and 90 PPR
 float error0 = 0, error1 = 0, error2 = 0;
 float pid0 = 0, pid1 = 0, pid2 = 0;
-float Ts = 0.08;
+float Ts = 0.03;
 uint8_t N = 20;
 uint8_t pwm = 0;
 
@@ -27,10 +28,9 @@ void calc_coeficients_pid() {
     ke2 = b2 / a0;
 }
 
-// PID controller
+// Controle PID
 int pid_control(int16_t rpm, int16_t rpm_ideal) {
-    
-    
+    //ki = kp * 0.1/(2*(kp/ki));
     error2 = error1; error1 = error0; pid2 = pid1; pid1 = pid0; // Updates variables
     
     error0 = rpm_ideal - rpm; // Computes new error
