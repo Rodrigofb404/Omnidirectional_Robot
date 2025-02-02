@@ -3,8 +3,8 @@
 #include <math.h>
 
 
-// float Kp = 0.9, Ki = 0.0434, Kd = 0.019; // BEST coef values for 0.3 ms verify and 90 PPR
-float Kp = 0.9, Ki = 0.065, Kd = 0.019; // BEST coef values for 0.3 ms verify and 90 PPR
+// float Kp = 0.9, Ki = 0.0434, Kd = 0.019;  BEST coef values for 0.3 ms verify and 90 PPR
+float Kp = 0.9, Ki = 0.065, Kd = 0.019;   // BEST coef values for 0.3 ms verify and 300 PPR
 
 float error01 = 0, error11 = 0, error21 = 0;
 float pid01 = 0, pid11 = 0, pid21 = 0;

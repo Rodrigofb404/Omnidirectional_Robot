@@ -8,6 +8,9 @@
 //  Direction of Rotation | Home Position
 //==========================================
 
+// ======================================================================
+// Configure the pin interruptions for encoders
+// ======================================================================
 void config_encoder (void) {
     // Enables Global Interruption
     SREG |= (1 << SREG_I);

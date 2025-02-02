@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
+#include <math.h>
 #include <timer0_PWM.h>
 #include <timer1_PWM.h>
 #include <timer2_PWM.h>
@@ -81,45 +82,6 @@ float rpm_calc(int16_t PPS, int16_t PPR) {
     return rpm;
 }
 
-void speed_up() {
-    speed_motor1 = OCR0A;
-    speed_motor2 = OCR2A;
-    speed_motor3 = OCR2B;
-
-    if (speed_motor1 <= 220) {
-        timer0_PWM_value(35, 0);
-    }
-
-    if (speed_motor2 <= 220)
-    {
-        timer2_PWM_value(35, 0);
-    }
-
-    if (speed_motor3 <= 220)
-    {
-        timer2_PWM_value(0, 35);
-    }   
-}
-void speed_down() {
-    speed_motor1 = OCR0A;
-    speed_motor2 = OCR2A;
-    speed_motor3 = OCR2B;
-
-    if (speed_motor1 >= 35) {
-        timer0_PWM_value(-35, 0);
-    }
-
-    if (speed_motor2 >= 35)
-    {
-        timer2_PWM_value(-35, speed_motor3);
-    }
-
-    if (speed_motor3 >= 35)
-    {
-        timer2_PWM_value(0, -35);
-    }
-}
-
 uint8_t pid_controlM1(float rpm, int16_t rpm_ideal);
 uint8_t pid_controlM2(float rpm, int16_t rpm_ideal);
 uint8_t pid_controlM3(float rpm, int16_t rpm_ideal);
@@ -139,7 +101,7 @@ void calc_coeficients_pid();
 // Vx - X-axis velocity
 // Vy - Y-axis velocity
 // W  - θ velocity
-// rpmx - velocity of the motors
+// desired_RPM_Mx - necessary RPM to reach the desired velocity
 // ======================================================================
 void Kinematics(float Vx, float Vy, float W, float *desired_RPM_M1, float *desired_RPM_M2, float *desired_RPM_M3) {
     float v1 = (-Vx * sin(ALPHA1) + Vy * cos(ALPHA1) + L * W) / R;
@@ -156,28 +118,32 @@ void Kinematics(float Vx, float Vy, float W, float *desired_RPM_M1, float *desir
     *desired_RPM_M3 = (*desired_RPM_M3 > MAX_rpm) ? MAX_rpm : (*desired_RPM_M3 < -MAX_rpm) ? -MAX_rpm : *desired_RPM_M3;
 }
 
+// ======================================================================
+// By pushing the buttons we select the direction of the robot
+// Angular reference it's not implemented
+// ======================================================================
 void direction_control(uint8_t FORWARD_btn, uint8_t LEFT_btn, uint8_t RIGHT_btn, uint8_t BACKWARD_btn, uint8_t CW_btn, uint8_t CCW_btn, 
                        float *desired_RPM_M1, float *desired_RPM_M2, float *desired_RPM_M3) {
 
     float Vx = 0.0, Vy = 0.0, W = 0.0;
 
     if (FORWARD_btn) {
-        Vy = 0.04;       // 1 m/s para frente
+        Vy = 0.04;       // 0.04 m/s para frente
     } 
     else if (LEFT_btn) {
-        Vx = -0.04;      // 1 m/s para esquerda
+        Vx = -0.04;      // 0.04 m/s para esquerda
     } 
     else if (RIGHT_btn) {
-        Vx = 0.04;       // 1 m/s para direita
+        Vx = 0.04;       // 0.04 m/s para direita
     } 
     else if (BACKWARD_btn) {
-        Vy = -0.04;      // 1 m/s para trás
+        Vy = -0.04;      // 0.04 m/s para trás
     } 
     else if (CW_btn) {
-        W = 0.04;    // 1 rad/s no sentido horário
+        W = 1;           // 1 rad/s no sentido horário
     } 
     else if (CCW_btn) {
-        W = -0.04;   // 1 rad/s no sentido anti-horário
+        W = -1;          // 1 rad/s no sentido anti-horário
     }
 
     Kinematics(Vx, Vy, W, desired_RPM_M1, desired_RPM_M2, desired_RPM_M3);

@@ -3,7 +3,7 @@
 #define FIRST_5_BITS 0b00011111
 #define PC0_PC1_PC2_PC3 0b00001111
 // ======================================================================
-// Configura os pinos utilizados para os encoders
+// Configure the ENCODERS pins
 // ======================================================================
 void encoders_io_config () {
 
@@ -17,7 +17,7 @@ void encoders_io_config () {
 }
 
 // ======================================================================
-// Configura os pinos utilizados para os timers
+// Configure the TIMERX pins
 // ======================================================================
 void timer_io_config() {
 
@@ -34,6 +34,9 @@ void timer_io_config() {
     DDRD |= (1 << DDD3); // PD3
 }
 
+// ======================================================================
+// Configure the H-BRIDGE pins
+// ======================================================================
 void h_bridge_config() {
     DDRD = 0b00110011; // PD0...PD2, PD4 and PD5 -> OUTPUT
     DDRB |= (1 << PB1);
@@ -41,8 +44,10 @@ void h_bridge_config() {
     DDRB |= (1 << PB5);
 }   
 
+// ======================================================================
+// Configure the PUSH BUTTONS pins
+// ======================================================================
 void interface_config() {
-
 
     // FORWARD (INPUT pull-up)
     DDRD &= ~(1 << PD7); 
@@ -65,6 +70,9 @@ void interface_config() {
     PORTC |= (1 << PC5); 
 }
 
+// ======================================================================
+// Start all the pins configurations
+// ======================================================================
 void IO_init() {
     h_bridge_config();
     encoders_io_config();

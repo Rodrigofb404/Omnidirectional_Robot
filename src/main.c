@@ -56,7 +56,10 @@ float desired_RPM_M1 = 0;
 float desired_RPM_M2 = 0;
 float desired_RPM_M3 = 0;
 
-// Count pulses for MOTOR1
+
+// ======================================================================
+// Count Pulses and read the direction of MOTOR1
+// ======================================================================
 ISR(PCINT1_vect) {	
 	currentQ1M1 = (PINC & (1 << PC0)) ? 1 : 0;
 	currentQ2M1 = (PINC & (1 << PC1)) ? 1 : 0;
@@ -72,7 +75,9 @@ ISR(PCINT1_vect) {
 	}
 }
 
-// Count pulses for MOTOR2
+// ======================================================================
+// Count Pulses and read the direction of MOTOR2
+// ======================================================================
 ISR(INT1_vect) {
 	currentQ2M2 = (PINC & (1 << PC2)) ? 1 : 0;
 	
@@ -85,7 +90,9 @@ ISR(INT1_vect) {
 	}
 }
 
-// Count pulses for MOTOR3
+// ======================================================================
+// Count Pulses and read the direction of MOTOR3
+// ======================================================================
 ISR(INT0_vect) {
 	currentQ2M3 = (PINC & (1 << PC3)) ? 1 : 0;
 
@@ -98,6 +105,11 @@ ISR(INT0_vect) {
 	}
 }
 
+// ======================================================================
+// Call ISR each 30ms
+// Calculate the RPM of the motor at each
+// Do the polling of the push buttons to define the direction of the robot movement
+// ======================================================================
 ISR(TIMER1_COMPA_vect) {
 	rpm_motor1 = rpm_calc(counter1, 300);
 	rpm_motor2 = rpm_calc(counter2, 300);
@@ -109,21 +121,20 @@ ISR(TIMER1_COMPA_vect) {
 	BACKWARD_btn = !(PINB & (1 << PB4)) ? 1 : 0;
 	CW_btn = !(PINC & (1 << PC5)) ? 1 : 0;
 	CCW_btn = 0;
-
-	direction_control(FORWARD_btn, LEFT_btn, RIGHT_btn, BACKWARD_btn, CW_btn, CCW_btn, &desired_RPM_M1, &desired_RPM_M2, &desired_RPM_M3);
 	
+	direction_control(FORWARD_btn, LEFT_btn, RIGHT_btn, BACKWARD_btn, CW_btn, CCW_btn, &desired_RPM_M1, &desired_RPM_M2, &desired_RPM_M3);
 
-	PID_pwmM1 = pid_controlM1(rpm_motor1, desired_RPM_M1);
+	PID_pwmM1 = pid_controlM1(rpm_motor1, fabs(desired_RPM_M1));
 	OCR0A = PID_pwmM1;
 	if (desired_RPM_M1 < 0) motor1_rotation(1);
 	else motor1_rotation(0);
 
-	PID_pwmM2 = pid_controlM2(rpm_motor2, desired_RPM_M2);
+	PID_pwmM2 = pid_controlM2(rpm_motor2, fabs(desired_RPM_M2));
 	OCR2A = PID_pwmM2;
 	if (desired_RPM_M2 < 0) motor2_rotation(1);
 	else motor2_rotation(0);
 
-	PID_pwmM3 = pid_controlM3(rpm_motor3, desired_RPM_M3);
+	PID_pwmM3 = pid_controlM3(rpm_motor3, fabs(desired_RPM_M3));
 	OCR0B = PID_pwmM3;
 	if (desired_RPM_M3 < 0) motor3_rotation(1);
 	else motor3_rotation(0);
@@ -131,22 +142,27 @@ ISR(TIMER1_COMPA_vect) {
 	counter1 = 0;
 	counter2 = 0;
 	counter3 = 0;
-	
 }
 
 
 int main (void) {
-	IO_init();
-	config_timer0_PWM(0, 0, 4, 0, 0);
-	config_timer2_PWM(0, 0, 4, 0, 0);
-	calc_coeficients_pid();
-	encoder(0);
+	IO_init(); 						  // Initialize the IO's
+	config_timer0_PWM(0, 0, 4, 0, 0); // Initialize TIMER0 PWM
+	config_timer2_PWM(0, 0, 4, 0, 0); // Initialize TIMER2 PWM
+	calc_coeficients_pid(); 		  // Calculate the PID coeficients
+	encoder(0); 					  // Configure encoder
 
+	// Define the start direction of the motors
 	motor1_rotation(0);
 	motor2_rotation(0);
 	motor3_rotation(0);
 
+
+// ======================================================================
+// Define the direction of the robot movement based on what button is pressed
+// Adjust the RPM for the desired value using PID
+// ======================================================================
 	while (1)
-	{	
+	{		
 	} 
 }
