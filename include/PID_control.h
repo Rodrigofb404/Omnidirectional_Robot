@@ -61,7 +61,7 @@ void calc_coeficients_pid() {
 // PID Controller
 // Each motor has one
 //=====================
-uint8_t pid_controlM1(float rpm, int16_t rpm_ideal) {
+uint8_t pid_controlM1(float rpm, float rpm_ideal) {
     //===================
     // Updates variables
     //===================
@@ -87,7 +87,7 @@ uint8_t pid_controlM1(float rpm, int16_t rpm_ideal) {
     return pwm;
 }
 
-uint8_t pid_controlM2(float rpm, int16_t rpm_ideal) {
+uint8_t pid_controlM2(float rpm, float rpm_ideal) {
     //===================
     // Updates variables
     //===================
@@ -113,7 +113,7 @@ uint8_t pid_controlM2(float rpm, int16_t rpm_ideal) {
     return pwm;
 }
 
-uint8_t pid_controlM3(float rpm, int16_t rpm_ideal) {
+uint8_t pid_controlM3(float rpm, float rpm_ideal) {
     //===================
     // Updates variables
     //===================

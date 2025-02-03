@@ -82,9 +82,9 @@ float rpm_calc(int16_t PPS, int16_t PPR) {
     return rpm;
 }
 
-uint8_t pid_controlM1(float rpm, int16_t rpm_ideal);
-uint8_t pid_controlM2(float rpm, int16_t rpm_ideal);
-uint8_t pid_controlM3(float rpm, int16_t rpm_ideal);
+uint8_t pid_controlM1(float rpm, float rpm_ideal);
+uint8_t pid_controlM2(float rpm, float rpm_ideal);
+uint8_t pid_controlM3(float rpm, float rpm_ideal);
 void calc_coeficients_pid();
 
 #define R 0.04        // Radius = 40mm
