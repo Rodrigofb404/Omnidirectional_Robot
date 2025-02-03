@@ -3,7 +3,8 @@
 #include <math.h>
 
 
-float Kp = 0.9, Ki = 0.0434, Kd = 0.019; // BEST coef values for 0.3 ms verify and 90 PPR
+// float Kp = 0.9, Ki = 0.0434, Kd = 0.019;  BEST coef values for 0.3 ms verify and 90 PPR
+float Kp = 0.9, Ki = 0.065, Kd = 0.019;   // BEST coef values for 0.3 ms verify and 300 PPR
 
 float error01 = 0, error11 = 0, error21 = 0;
 float pid01 = 0, pid11 = 0, pid21 = 0;
@@ -37,7 +38,7 @@ void calc_coeficients_pid() {
 }
 
 // Controle PID
-int pid_control1(int16_t rpm, int16_t rpm_ideal) {
+uint8_t pid_controlM1(float rpm, int16_t rpm_ideal) {
     error21 = error11; error11 = error01; pid21 = pid11; pid11 = pid01; // Updates variables
     
     error01 = rpm_ideal - rpm; // Computes new error
@@ -52,7 +53,7 @@ int pid_control1(int16_t rpm, int16_t rpm_ideal) {
     return pwm;
 }
 
-int pid_control2(int16_t rpm, int16_t rpm_ideal) {
+uint8_t pid_controlM2(float rpm, int16_t rpm_ideal) {
     error22 = error12; error12 = error02; pid22 = pid12; pid12 = pid02; // Updates variables
     
     error02 = rpm_ideal - rpm; // Computes new error
@@ -67,7 +68,7 @@ int pid_control2(int16_t rpm, int16_t rpm_ideal) {
     return pwm;
 }
 
-int pid_control3(int16_t rpm, int16_t rpm_ideal) {
+uint8_t pid_controlM3(float rpm, int16_t rpm_ideal) {
     error23 = error13; error13 = error03; pid23 = pid13; pid13 = pid03; // Updates variables
     
     error03 = rpm_ideal - rpm; // Computes new error
