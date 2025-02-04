@@ -107,8 +107,9 @@ ISR(INT0_vect) {
 
 // ======================================================================
 // Call ISR each 30ms
-// Calculate the RPM of the motor at each
+// Calculate the RPM of the motor
 // Do the polling of the push buttons to define the direction of the robot movement
+// Adjust the RPM for the desired value using PID
 // ======================================================================
 ISR(TIMER1_COMPA_vect) {
 	rpm_motor1 = rpm_calc(counter1, 300);
@@ -157,11 +158,6 @@ int main (void) {
 	motor2_rotation(0);
 	motor3_rotation(0);
 
-
-// ======================================================================
-// Define the direction of the robot movement based on what button is pressed
-// Adjust the RPM for the desired value using PID
-// ======================================================================
 	while (1)
 	{		
 	} 
