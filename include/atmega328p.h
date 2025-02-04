@@ -104,6 +104,7 @@ void calc_coeficients_pid();
 // desired_RPM_Mx - necessary RPM to reach the desired velocity
 // ======================================================================
 void Kinematics(float Vx, float Vy, float W, float *desired_RPM_M1, float *desired_RPM_M2, float *desired_RPM_M3) {
+    // Calculate the velocity of each wheel in rad/s
     float v1 = (-Vx * sin(ALPHA1) + Vy * cos(ALPHA1) + L * W) / R;
     float v2 = (-Vx * sin(ALPHA2) + Vy * cos(ALPHA2) + L * W) / R;
     float v3 = (-Vx * sin(ALPHA3) + Vy * cos(ALPHA3) + L * W) / R;
@@ -113,6 +114,7 @@ void Kinematics(float Vx, float Vy, float W, float *desired_RPM_M1, float *desir
     *desired_RPM_M2 = (v2 * 60.0) / (2 * M_PI);
     *desired_RPM_M3 = (v3 * 60.0) / (2 * M_PI);
 
+    // Verify if the RPM values are within the motor's RPM limits
     *desired_RPM_M1 = (*desired_RPM_M1 > MAX_rpm) ? MAX_rpm : (*desired_RPM_M1 < -MAX_rpm) ? -MAX_rpm : *desired_RPM_M1;
     *desired_RPM_M2 = (*desired_RPM_M2 > MAX_rpm) ? MAX_rpm : (*desired_RPM_M2 < -MAX_rpm) ? -MAX_rpm : *desired_RPM_M2;
     *desired_RPM_M3 = (*desired_RPM_M3 > MAX_rpm) ? MAX_rpm : (*desired_RPM_M3 < -MAX_rpm) ? -MAX_rpm : *desired_RPM_M3;
