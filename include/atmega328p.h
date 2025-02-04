@@ -109,9 +109,9 @@ void Kinematics(float Vx, float Vy, float W, float *desired_RPM_M1, float *desir
     float v3 = (-Vx * sin(ALPHA3) + Vy * cos(ALPHA3) + L * W) / R;
 
     // Conversion of rad/s to RPM
-    *desired_RPM_M1 = (v1 * 60.0) / (2 * M_PI * R);
-    *desired_RPM_M2 = (v2 * 60.0) / (2 * M_PI * R);
-    *desired_RPM_M3 = (v3 * 60.0) / (2 * M_PI * R);
+    *desired_RPM_M1 = (v1 * 60.0) / (2 * M_PI);
+    *desired_RPM_M2 = (v2 * 60.0) / (2 * M_PI);
+    *desired_RPM_M3 = (v3 * 60.0) / (2 * M_PI);
 
     *desired_RPM_M1 = (*desired_RPM_M1 > MAX_rpm) ? MAX_rpm : (*desired_RPM_M1 < -MAX_rpm) ? -MAX_rpm : *desired_RPM_M1;
     *desired_RPM_M2 = (*desired_RPM_M2 > MAX_rpm) ? MAX_rpm : (*desired_RPM_M2 < -MAX_rpm) ? -MAX_rpm : *desired_RPM_M2;
